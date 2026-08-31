@@ -1,0 +1,107 @@
+{
+  "record_type": "self-generated release-integrity record; not an independent audit",
+  "source_private_joblib": {
+    "distributed_in_public_release": false,
+    "sha256": "e5a648cba47e0ba98e902144e45b937610f82c0d96719b4ef248cf3ab903ef73"
+  },
+  "public_joblib": {
+    "path": "models/SAF_Predict_public_model_bundle_v1.joblib",
+    "sha256": "d4ecab30c318d1923f27b7f0acb1fb117510edb5a603857903d6568c736477a7"
+  },
+  "public_browser_bundle": {
+    "json_path": "models/model_bundle.json",
+    "json_sha256": "93003b6d25338b0096d20b8d0d29612dc2a54b2e3798a9a4a18a73e38f0dbffe",
+    "javascript_path": "model_bundle.js",
+    "javascript_sha256": "d8cca36e6ea10bccb25d725d791317fb7958c4999610e1eea3cbd76c85c741f2",
+    "record_count": 300,
+    "record_schema_valid": true,
+    "development_x_vectors_equal_private_source": true,
+    "name_zh_absent": true,
+    "author_reported_held_out_field_scoped": true
+  },
+  "development_record_count": 300,
+  "approved_transformations": [
+    "Removed name_zh metadata from builtin public-artifact metadata containers.",
+    "Replaced each OOD development record, in original stored order, with record_id DEV-0001 through DEV-0300 and the unchanged X01-X07 vector.",
+    "Added factual public-release metadata-reduction notes and a descriptor-vector linkability caveat.",
+    "Mapped validation nearest-development identifiers to DEV identifiers and removed nearest-development molecule/formula columns."
+  ],
+  "canonical_scientific_payload_sha256": "1d85ff9e0d105c0e650e26f5b6351d48260319c2c200acf4fba5ee6d41675972",
+  "semantic_equivalence": {
+    "canonical_scientific_payload_equal": true,
+    "trained_estimator_joblib_hashes_equal": true,
+    "trained_estimator_hashes": {
+      "Y01": "7e1e0dfdf8cf500569780d28cef89ae959283143fc0772f0e43d0ee8bc7d4af2",
+      "Y03": "555a99d76790f45a669e68c8b5d13eace5fbb920344d8ddc41229ee7c73695d4",
+      "Y04": "dc6d5f9b007c0f2b08904e9a5e8e3930c8f9f8d47d8a5c3a04642f080799a96c",
+      "Y05": "ea09fa74a937800ff8099048ee86c8ca0d30d34da910551a23fc133c55929088",
+      "Y06": "12f62c6b8d87adb10dd7336ef4eff5dcac262f5e4835578952d6da493142a472",
+      "Y07": "5c2d0b0b6302c5ee773c8127e758139b9ba2f0495d21a8bfb696aba14bf1edab"
+    },
+    "predictions_exact_for_all_checked_rows": true,
+    "prediction_rows_checked": 310,
+    "prediction_check_scope": "Maintainer-generated semantic equivalence check on 300 development vectors and 10 held-out descriptor rows; not an independent validation.",
+    "prediction_targets_exact": {
+      "Y01": true,
+      "Y03": true,
+      "Y04": true,
+      "Y05": true,
+      "Y06": true,
+      "Y07": true
+    },
+    "maximum_absolute_prediction_difference": {
+      "Y01": 0.0,
+      "Y03": 0.0,
+      "Y04": 0.0,
+      "Y05": 0.0,
+      "Y06": 0.0,
+      "Y07": 0.0
+    },
+    "intervals_equal": true,
+    "input_ranges_equal": true,
+    "output_ranges_equal": true,
+    "deployment_mapping_equal": true,
+    "ood_reference_arrays_equal": true,
+    "development_x_vectors_equal": true,
+    "public_record_schema_valid": true,
+    "name_zh_absent": true
+  },
+  "validation_csvs": {
+    "held_out_predictions.csv": {
+      "path": "validation/held_out_predictions.csv",
+      "expected_private_source_sha256": "040a212e0ff390af7d7ec8a0e68e7c77c5c19b09d2bbd3c6b274a5b245e19018",
+      "input_sha256": "0c33f25d14867300b76e85c22d318d04c9c4653798554201c9bfab3758f405a4",
+      "public_sha256": "0c33f25d14867300b76e85c22d318d04c9c4653798554201c9bfab3758f405a4",
+      "row_count": 10,
+      "holdout_identity_fields_preserved": [
+        "record_id",
+        "molecule",
+        "molecular_formula"
+      ],
+      "all_other_field_values_preserved": true,
+      "nearest_id_field": "nearest_development_record",
+      "removed_fields": [
+        "nearest_training_formula",
+        "nearest_training_molecule"
+      ]
+    },
+    "held_out_test_predictions_long.csv": {
+      "path": "validation/held_out_test_predictions_long.csv",
+      "expected_private_source_sha256": "a9132b32e99880d21371a000b4cd2cf6b924fa28c3a6044945ed1abc02a47581",
+      "input_sha256": "18eadf1f77c0c7ecbd248055974d3556c9840af3683cb3cdb8ec9d696e748cc1",
+      "public_sha256": "18eadf1f77c0c7ecbd248055974d3556c9840af3683cb3cdb8ec9d696e748cc1",
+      "row_count": 70,
+      "holdout_identity_fields_preserved": [
+        "record_id",
+        "molecule",
+        "molecular_formula"
+      ],
+      "all_other_field_values_preserved": true,
+      "nearest_id_field": "nearest_development_record",
+      "removed_fields": [
+        "nearest_training_formula",
+        "nearest_training_molecule"
+      ]
+    }
+  }
+}

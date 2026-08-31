@@ -1,0 +1,44 @@
+{
+  "check_scope": "Released-file integrity and internal consistency only; not an independent audit or proof of analysis chronology.",
+  "recorded_original_check_result": {
+    "all_listed_checks_passed": true,
+    "private_joblib_hash_matches_recorded_identifier": true,
+    "held_out_prediction_rows": 10,
+    "record_property_rows": 70,
+    "metric_rows": 7,
+    "all_predictions_finite": true,
+    "all_metrics_finite": true,
+    "y02_identity_within_1e-12": true
+  },
+  "author_reported_workflow": {
+    "sheet2_excluded_from_model_selection_and_tuning": true,
+    "predictions_generated_before_reference_value_scoring": true,
+    "post_test_refitting_performed": false,
+    "independently_timestamped_pre_evaluation_release_present_in_repository": false,
+    "note": "These workflow statements are author-reported metadata and are not treated as automated integrity-check results."
+  },
+  "wording_update_record": {
+    "metadata_wording_updated_after_scoring": true,
+    "scope": "The test-set label was shortened to internal held-out test set; predictions, reference values, and metrics were unchanged in the recorded private-source artifacts."
+  },
+  "source_artifact_identifiers": {
+    "private_joblib_sha256": "e5a648cba47e0ba98e902144e45b937610f82c0d96719b4ef248cf3ab903ef73",
+    "original_wide_holdout_predictions_sha256": "040a212e0ff390af7d7ec8a0e68e7c77c5c19b09d2bbd3c6b274a5b245e19018",
+    "original_long_holdout_predictions_sha256": "a9132b32e99880d21371a000b4cd2cf6b924fa28c3a6044945ed1abc02a47581",
+    "recorded_original_held_out_test_metrics_sha256": "688a08fd464c6de65ca6eb66af1dfc6d43d87ef6068f89af2ec8ba8c1ebede25",
+    "original_test_summary_sha256": "354c10bcb68004bb60cca3f27cdda8e93c8f51c51f8f8d000038ab7bdfad70d0"
+  },
+  "public_deidentified_artifacts": {
+    "joblib_path": "models/SAF_Predict_public_model_bundle_v1.joblib",
+    "joblib_sha256": "d4ecab30c318d1923f27b7f0acb1fb117510edb5a603857903d6568c736477a7",
+    "wide_holdout_predictions_path": "validation/held_out_predictions.csv",
+    "wide_holdout_predictions_sha256": "0c33f25d14867300b76e85c22d318d04c9c4653798554201c9bfab3758f405a4",
+    "long_holdout_predictions_path": "validation/held_out_test_predictions_long.csv",
+    "long_holdout_predictions_sha256": "18eadf1f77c0c7ecbd248055974d3556c9840af3683cb3cdb8ec9d696e748cc1",
+    "held_out_test_metrics_path": "validation/held_out_test_metrics.csv",
+    "held_out_test_metrics_sha256": "20341d84fca41e2199eea031a32523a58381efba7e786d7ee89f986ecb76977c",
+    "held_out_test_summary_path": "validation/held_out_test_summary.json",
+    "held_out_test_summary_sha256": "9fdd5f43acb9fdb41c785f60b5745834eed3501befe9a890dcddac9e60b030b3",
+    "hash_status": "Public artifact hashes populated after metadata reduction and release assembly."
+  }
+}

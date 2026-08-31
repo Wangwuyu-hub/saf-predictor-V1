@@ -1,0 +1,6 @@
+SAF-Predict 1.0.0
+Development set: Sheet1 (n = 300)
+Internal holdout set: Sheet2 (n = 10)
+Model release: fixed serialized artifacts
+Browser/operating-system compatibility matrix: not included
+Research-stage physicochemical prescreening only.

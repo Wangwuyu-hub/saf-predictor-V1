@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="icon" href="data:,">
+  <title>SAF-Predict User Guide</title>
+  <style>
+    :root{--ink:#17242d;--muted:#5e6b73;--line:#d8e0e4;--navy:#173b57;--blue:#2c6e9f;--canvas:#f4f7f8;--red:#a3413d;--amber:#b66a2c}
+    *{box-sizing:border-box}body{margin:0;background:var(--canvas);color:var(--ink);font-family:Arial,sans-serif;line-height:1.55}
+    header{padding:42px max(28px,calc((100vw - 1120px)/2));color:#fff;background:linear-gradient(145deg,#173b57,#2b6874)}
+    header h1{margin:5px 0;font-size:38px}header p{max-width:820px;color:#dce9ee}.tag{display:inline-block;padding:5px 9px;border:1px solid rgba(255,255,255,.25);border-radius:999px;font-size:11px;font-weight:700}
+    main{max-width:1120px;margin:0 auto;padding:32px 28px 60px}.card{margin:18px 0;padding:22px;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 14px 36px rgba(21,50,68,.07)}
+    h2{margin:0 0 12px}p,li{color:var(--muted)}.alert{padding:13px 15px;border-radius:10px;color:#74400e;background:#fff3e8;border:1px solid #efc79f;font-weight:700}
+    .table-scroll{overflow:auto;border:1px solid var(--line);border-radius:10px}table{width:100%;border-collapse:collapse;background:#fff;font-size:12px}th{color:#fff;background:var(--navy);text-align:left;white-space:nowrap}th,td{padding:9px 10px;border-bottom:1px solid #e5eaed}tbody tr:hover{background:#f5f9fb}
+    code{padding:2px 5px;border-radius:5px;background:#eef3f5}a{color:var(--blue);font-weight:700}
+    @media(max-width:760px){header h1{font-size:30px}}@media(max-width:520px){main{padding:24px 14px}}
+  </style>
+</head>
+<body>
+  <header><span class="tag">OFFLINE, BROWSER-BASED RESEARCH APPLICATION</span><h1>SAF-Predict User Guide</h1><p>Predict mass-based and volumetric net heat of combustion, density, solid–liquid phase-transition temperature, boiling point, flash point, and kinematic viscosity at 40 °C from seven molecular descriptors.</p></header>
+  <main>
+    <section class="card">
+      <h2>Quick start</h2>
+      <ol>
+        <li>Open <code>index.html</code> in a desktop browser with JavaScript enabled. No installation, Python environment, or internet connection is required. This release does not include a browser/operating-system compatibility matrix.</li>
+        <li>For Windows only, <code>Start_SAF_Predictor.bat</code> is an optional shortcut that opens the same file.</li>
+        <li>Enter X01–X07 under “Single-compound prediction” and confirm that the compound is a neutral, single-component pure hydrocarbon.</li>
+        <li>Interpret every point estimate with its empirical prediction interval, applicability-domain (AD) distance percentile, and any warnings.</li>
+        <li>For batch prediction, start from <code>examples/batch_input_template.csv</code>.</li>
+      </ol>
+    </section>
+    <section class="card">
+      <h2>Input descriptors</h2>
+      <div class="table-scroll"><table><thead><tr><th>Code</th><th>Name</th><th>Unit</th><th>Definition</th></tr></thead><tbody>
+        <tr><td>X01</td><td>Molar mass</td><td>g mol−1</td><td>RDKit <code>Descriptors.MolWt</code> average molecular mass</td></tr>
+        <tr><td>X02</td><td>H/C atomic ratio</td><td>1</td><td>Hydrogen-atom count divided by carbon-atom count</td></tr>
+        <tr><td>X03</td><td>Aromatic carbon fraction</td><td>0–1</td><td>Aromatic-carbon count divided by total carbon count</td></tr>
+        <tr><td>X04</td><td>Ring count</td><td>count</td><td>RDKit <code>CalcNumRings</code></td></tr>
+        <tr><td>X05</td><td>Branching-carbon count</td><td>count</td><td>Carbon atoms directly bonded to at least three carbon atoms</td></tr>
+        <tr><td>X06</td><td>Graph-automorphism descriptor</td><td>1</td><td>ln(1 + graph-automorphism match count), with stereochemistry ignored</td></tr>
+        <tr><td>X07</td><td>Kier κ2 shape index</td><td>1</td><td>RDKit <code>GraphDescriptors.Kappa2</code></td></tr>
+      </tbody></table></div>
+    </section>
+    <section class="card">
+      <h2>Limitations</h2>
+      <div class="alert">Y04 performed poorly on the internal holdout (R² = −0.021; MAE = 25.2 °C; n = 10). Do not use Y04 alone to rank or select compounds; experimental confirmation is required.</div>
+      <ul>
+        <li>The model applies only to pure hydrocarbon molecules represented using the documented descriptor definitions; it does not apply to mixtures, finished fuels, heteroatom-containing compounds, ions, or polymers.</li>
+        <li>Y02 is calculated from predicted Y01 × predicted Y03 rather than fitted independently.</li>
+        <li>Y04 is the pure-compound solid–liquid phase-transition temperature, not the freezing point of a finished fuel; Y05 is not a distillation curve, and Y07 is not a low-temperature aviation-fuel viscosity specification.</li>
+        <li><code>source-supported</code>, <code>formula-derived</code>, and <code>constructed</code> are author-assigned curation categories for the development labels. Source-supported denotes a traceable literature or database entry, not necessarily a direct, condition-matched experiment. The record-level provenance table is not included in this software-only repository.</li>
+        <li>Nine of the ten records in the internal holdout set (eight of nine unique molecular formulae) share a formula with the development set. This internal holdout evaluation is not independent external, prospective, or experimental validation.</li>
+        <li>The applicability-domain (AD) distance percentile reports position in the development-set reference-distance distribution; it is not a calibrated prediction-error probability.</li>
+        <li>The application predicts pure-compound physicochemical properties only. It does not assess fuel-specification compliance, blend performance, sustainability, synthesis, safety, emissions, cost, or engine performance.</li>
+      </ul>
+      <p><a href="index.html">Open SAF-Predict</a> · <a href="validation/held_out_test_report.html">Internal holdout evaluation report</a> · <a href="models/MODEL_CARD.md">Model card</a> · <a href="models/model_artifact_manifest.json">Model artifact manifest</a> · <a href="RELEASE_CHECKS.json">Release checks</a></p>
+    </section>
+    <section class="card">
+      <h2>Traceability and release artifacts</h2>
+      <p>This release includes the browser application, fixed serialized model artifacts, internal holdout evaluation outputs, and release checks. According to the recorded workflow, model and hyperparameter selection used the development set before the internal holdout evaluation. Current hashes identify artifacts but do not independently establish pre-evaluation chronology.</p>
+      <p>The public model artifacts omit molecule names, molecular formulae, original development-record identifiers, and bilingual display metadata. X01–X07 development vectors remain for nearest-neighbour applicability-domain calculations and may be linkable to a known source dataset. This software-only repository is not a complete model-development reproducibility archive.</p>
+      <p><a href="held_out_test_data.js">Internal holdout data used by the interface</a> · <a href="tests/test_js_against_python_reference_cases.js">JavaScript reference-case test</a> · <a href="release_manifest.json">Release manifest</a></p>
+      <p>No open-source license is included in v1.0.0. Unless a license is added, copyright law reserves all rights. The release does not grant redistribution rights for source records compiled from third-party publications or databases.</p>
+    </section>
+  </main>
+</body>
+</html>

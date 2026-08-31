@@ -1,0 +1,8 @@
+﻿target,property,deployment_model,selection_data,selection_cv,selection_metric,best_cv_rmse,best_params,random_seed
+Y01,Mass-based net heat of combustion,RF,Sheet1 only,"GroupKFold(n_splits=5), groups=molecular formula",RMSE,0.31626077725283486,"{""max_depth"": 8, ""max_features"": 1.0, ""min_samples_leaf"": 3}",20269831.0
+Y02,Volumetric net heat of combustion,Derived from Y01 and Y03 predictions,Sheet1 only,Not applicable,Physical identity,,{},
+Y03,Density,SVR,Sheet1 only,"GroupKFold(n_splits=5), groups=molecular formula",RMSE,0.02002690473783406,"{""regressor__regressor__C"": 10.0, ""regressor__regressor__epsilon"": 0.1, ""regressor__regressor__gamma"": 0.1}",20269832.0
+Y04,Solid–liquid phase-transition temperature,XGBoost,Sheet1 only,"GroupKFold(n_splits=5), groups=molecular formula",RMSE,23.07250520347349,"{""learning_rate"": 0.1, ""max_depth"": 3, ""min_child_weight"": 1, ""n_estimators"": 200, ""subsample"": 0.85}",20269833.0
+Y05,Boiling point,SVR,Sheet1 only,"GroupKFold(n_splits=5), groups=molecular formula",RMSE,9.817590803549882,"{""regressor__regressor__C"": 100.0, ""regressor__regressor__epsilon"": 0.05, ""regressor__regressor__gamma"": 0.1}",20269834.0
+Y06,Flash point,SVR,Sheet1 only,"GroupKFold(n_splits=5), groups=molecular formula",RMSE,7.647922564117512,"{""regressor__regressor__C"": 100.0, ""regressor__regressor__epsilon"": 0.05, ""regressor__regressor__gamma"": 0.1}",20269835.0
+Y07,Kinematic viscosity at 40 °C,SVR,Sheet1 only,"GroupKFold(n_splits=5), groups=molecular formula",RMSE,0.39017227375346913,"{""regressor__regressor__C"": 10.0, ""regressor__regressor__epsilon"": 0.05, ""regressor__regressor__gamma"": 0.1}",20269836.0

@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="Offline, browser-based research application for predicting seven physicochemical properties of SAF-relevant hydrocarbons from seven molecular descriptors.">
+  <link rel="icon" href="data:,">
+  <title>SAF-Predict | Physicochemical Property Predictor for SAF-Relevant Hydrocarbons</title>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="model_bundle.js"></script>
+  <script defer src="held_out_test_data.js"></script>
+  <script defer src="predictor_core.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <div class="brand-mark" aria-hidden="true">SP</div>
+      <div>
+        <div class="brand">SAF-Predict</div>
+        <div class="brand-subtitle">Physicochemical property predictor for SAF-relevant hydrocarbons</div>
+      </div>
+    </div>
+    <div class="top-status">
+      <span class="status-dot"></span>Local computation · no data upload
+      <span id="version-pill" class="pill">v—</span>
+      <span class="pill">Development set: n = 300</span>
+    </div>
+  </header>
+
+  <nav class="tabs" aria-label="Primary navigation">
+    <button class="tab is-active" data-tab="single">Single-compound prediction</button>
+    <button class="tab" data-tab="batch">Batch prediction</button>
+    <button class="tab" data-tab="validation">Internal holdout evaluation</button>
+    <button class="tab" data-tab="about">Model card</button>
+  </nav>
+
+  <main>
+    <section id="tab-single" class="tab-panel is-active">
+      <div class="hero-grid">
+        <div>
+          <p class="eyebrow">STRUCTURAL DESCRIPTORS → PHYSICOCHEMICAL PROPERTIES</p>
+          <h1>Predict seven physicochemical properties<br>from seven molecular descriptors</h1>
+          <p class="lead">Enter X01–X07 using the definitions applied to the development set. The application reports point estimates, 90% and 95% empirical prediction intervals calibrated from grouped out-of-fold residuals, development-label provenance, and the applicability-domain (AD) distance percentile.</p>
+        </div>
+        <aside class="scope-card">
+          <div class="scope-title">Intended domain</div>
+          <p>Neutral, single-component pure hydrocarbons with fully specified molecular structures. Descriptor definitions must match those used for model development.</p>
+          <div class="scope-warning">The application predicts pure-compound physicochemical properties only. It does not assess fuel-specification compliance, blend performance, sustainability, synthesis, safety, emissions, cost, or engine performance. Confirm candidate properties experimentally.</div>
+        </aside>
+      </div>
+
+      <form id="single-form" class="card input-card" novalidate>
+        <div class="card-heading">
+          <div>
+            <p class="eyebrow">INPUT</p>
+            <h2>Molecular identity and structural descriptors</h2>
+          </div>
+          <button id="fill-median" class="button button-secondary" type="button">Fill with development-set medians</button>
+        </div>
+        <div class="identity-grid">
+          <label class="field identity-field">
+            <span>Molecule name <small>optional; not used by the model</small></span>
+            <input id="molecule-name" type="text" placeholder="e.g., candidate-01">
+          </label>
+          <label class="field identity-field">
+            <span>Molecular formula <small>optional; retained only as metadata</small></span>
+            <input id="molecular-formula" type="text" placeholder="e.g., C10H20">
+          </label>
+        </div>
+        <div id="input-grid" class="descriptor-grid"></div>
+        <div class="form-footer">
+          <label class="confirm-row">
+            <input id="hydrocarbon-confirm" type="checkbox" required>
+            <span>The input is a neutral, single-component pure hydrocarbon, and X01–X07 follow the documented definitions.</span>
+          </label>
+          <button class="button button-primary" type="submit">Predict properties</button>
+        </div>
+      </form>
+
+      <div id="single-message" class="message-slot" aria-live="polite"></div>
+      <section id="single-results" class="results-section is-hidden" aria-live="polite">
+        <div id="applicability-card"></div>
+        <div id="prediction-groups"></div>
+        <div id="prediction-warnings"></div>
+      </section>
+    </section>
+
+    <section id="tab-batch" class="tab-panel">
+      <div class="section-heading">
+        <p class="eyebrow">BATCH PREDICTION</p>
+        <h1>Batch prediction and CSV export</h1>
+        <p class="lead narrow">Upload a CSV file containing X01–X07. Invalid rows do not interrupt the remaining predictions, and all calculations run locally in the browser.</p>
+      </div>
+      <div class="card batch-card">
+        <div class="batch-actions">
+          <label class="file-drop" for="batch-file">
+            <span class="file-icon">CSV</span>
+            <strong>Select or drop a CSV file</strong>
+            <span id="batch-file-name">Required columns: X01, X02, X03, X04, X05, X06, X07</span>
+            <input id="batch-file" type="file" accept=".csv,text/csv">
+          </label>
+          <div class="batch-side">
+            <a class="button button-secondary" href="examples/batch_input_template.csv" download>Download input template</a>
+            <button id="run-batch" class="button button-primary" type="button" disabled>Run batch prediction</button>
+          </div>
+        </div>
+        <div id="batch-message" class="message-slot" aria-live="polite"></div>
+        <div id="batch-preview"></div>
+      </div>
+      <section id="batch-results" class="is-hidden">
+        <div id="batch-summary" class="metric-strip"></div>
+        <div class="table-card">
+          <div class="table-toolbar">
+            <h2>Batch results</h2>
+            <button id="download-batch" class="button button-secondary" type="button">Download complete results (CSV)</button>
+          </div>
+          <div class="table-scroll"><table id="batch-table"></table></div>
+        </div>
+      </section>
+    </section>
+
+    <section id="tab-validation" class="tab-panel">
+      <div class="section-heading">
+        <p class="eyebrow">INTERNAL HOLDOUT EVALUATION</p>
+        <h1>Internal holdout evaluation</h1>
+        <p class="lead narrow">According to the recorded workflow, model selection and hyperparameter selection used the development set (Sheet1; n = 300), followed by evaluation on the internal holdout set (Sheet2; n = 10). Current hashes identify the released artifacts but do not independently establish pre-evaluation chronology. This evaluation is not external, prospective, or experimental validation.</p>
+      </div>
+      <div id="validation-overview" class="metric-strip"></div>
+      <div id="validation-alert"></div>
+      <div class="table-card">
+        <div class="table-toolbar">
+          <h2>Internal holdout performance by property</h2>
+          <div class="toolbar-links">
+            <a href="validation/held_out_test_report.html">Open the evaluation report</a>
+            <a href="validation/held_out_test_metrics.csv" download>Download metrics (CSV)</a>
+            <a href="validation/held_out_test_predictions_long.csv" download>Download record-level predictions</a>
+          </div>
+        </div>
+        <div class="table-scroll"><table id="validation-table"></table></div>
+      </div>
+      <div class="note-grid">
+        <div class="note-card"><strong>Holdout limitation</strong><p>Nine of the ten records share a molecular formula with records in the development set. The results therefore describe testing within the same data-construction workflow.</p></div>
+        <div class="note-card"><strong>Interval interpretation</strong><p>The 90% and 95% empirical prediction intervals were calibrated from molecular-formula-grouped out-of-fold residuals. They are neither Bayesian probabilities nor coverage guarantees for an individual compound.</p></div>
+        <div class="note-card"><strong>Recorded workflow</strong><p>According to the recorded workflow, the internal holdout set was not used for model or hyperparameter selection. Current hashes identify artifacts but do not independently establish pre-evaluation chronology.</p></div>
+      </div>
+    </section>
+
+    <section id="tab-about" class="tab-panel">
+      <div class="section-heading">
+        <p class="eyebrow">MODEL CARD</p>
+        <h1>Models, variables, and limitations</h1>
+      </div>
+      <div class="about-grid">
+        <article class="card prose-card">
+          <h2>Fixed serialized models</h2>
+          <div id="model-mapping"></div>
+          <p>Volumetric net heat of combustion (Y02) is not fitted independently. It is calculated exactly as predicted Y01 × predicted Y03 to preserve physical consistency between heat of combustion and density.</p>
+        </article>
+        <article class="card prose-card">
+          <h2>Development-label provenance</h2>
+          <p>Source-supported, formula-derived, and constructed are author-assigned curation categories for the development labels. Source-supported means that a traceable publication or database record exists; it does not necessarily mean a direct measurement under matched conditions. The record-level provenance table is not included in this software-only repository.</p>
+          <p>Compiled source conditions are retained for density and flash-point labels; these values must not be interpreted as measurements obtained using one standardized certification method.</p>
+          <p>Formula-derived values contribute substantially to the development labels for flash point and kinematic viscosity at 40 °C. Interpret these predictions with their empirical prediction intervals and applicability-domain (AD) distance percentile.</p>
+        </article>
+        <article class="card prose-card wide-card">
+          <h2>Limitations</h2>
+          <div class="boundary-grid">
+            <p><strong>Y01</strong>: Net heat of combustion/lower heating value; not higher heating value or life-cycle carbon intensity.</p>
+            <p><strong>Y04</strong>: Pure-compound solid–liquid phase-transition temperature; not the freezing point of a finished fuel.</p>
+            <p><strong>Y05</strong>: Pure-compound boiling point; not a fuel distillation curve.</p>
+            <p><strong>Y06</strong>: Flash point depends on open-/closed-cup method and measurement conditions.</p>
+            <p><strong>Y07</strong>: Kinematic viscosity at 40 °C; not a low-temperature aviation-fuel viscosity specification.</p>
+            <p><strong>Applicability-domain (AD) distance percentile</strong>: Position in the development-set reference-distance distribution; not a calibrated prediction-error probability.</p>
+          </div>
+        </article>
+      </div>
+      <div class="download-panel">
+        <div><strong>Traceability and release artifacts</strong><span>The model card, model artifact manifest, development summary, internal holdout evaluation report, reference-case test, and release checks accompany the fixed serialized model artifacts.</span></div>
+        <div class="toolbar-links">
+          <a href="models/model_card.json">Model card (JSON)</a>
+          <a href="models/model_artifact_manifest.json">Model artifact manifest</a>
+          <a href="models/model_training_summary.csv">Development summary</a>
+          <a href="RELEASE_CHECKS.json">Release checks</a>
+          <a href="tests/test_js_against_python_reference_cases.js">JavaScript reference-case test</a>
+          <a href="release_manifest.json">Release manifest</a>
+          <a href="README.html">User guide</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p><strong>SAF-Predict</strong> · Offline, browser-based research application · Molecular inputs remain on the user's device · No browser/operating-system compatibility matrix is included</p>
+  </footer>
+</body>
+</html>

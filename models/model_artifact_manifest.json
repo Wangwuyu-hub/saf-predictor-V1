@@ -1,0 +1,85 @@
+{
+  "platform_name": "SAF-Predict",
+  "version": "1.0.0",
+  "manifest_scope": "Author-provided analysis metadata and artifact identifiers. This manifest is not an independent audit and does not establish pre-evaluation chronology.",
+  "recorded_selection_basis": "According to the author-provided workflow record, model families were selected from the Sheet1 grouped nested-cross-validation results reported in Figure 4.",
+  "development_sheet": "Sheet1",
+  "development_records": 300,
+  "grouping_variable": "molecular formula",
+  "held_out_sheet": "Sheet2",
+  "held_out_records": 10,
+  "held_out_role": "internal held-out test set",
+  "deployment_mapping": {
+    "Y01": "Random Forest",
+    "Y02": "derived as predicted Y01 multiplied by predicted Y03",
+    "Y03": "support vector regression",
+    "Y04": "XGBoost",
+    "Y05": "support vector regression",
+    "Y06": "support vector regression",
+    "Y07": "support vector regression"
+  },
+  "recorded_hyperparameter_selection": "Five-fold GroupKFold grid search on Sheet1, scored by negative RMSE.",
+  "recorded_uncertainty_method": "Symmetric 90% and 95% empirical prediction intervals derived from formula-group maxima of nested-CV out-of-fold absolute residuals.",
+  "recorded_descriptor_distance_method": "Continuous nearest-neighbour seven-descriptor-space distance percentile relative to Sheet1 leave-one-formula-group-out distances.",
+  "recorded_test_policy": "The author-provided workflow designated Sheet2 for use after model selection and fitting. The repository contains no independently timestamped pre-evaluation model release and therefore does not independently establish when Sheet2 reference values were first accessed.",
+  "author_reported_sheet2_excluded_from_model_development": true,
+  "author_reported_no_post_test_refit": true,
+  "claim_boundary": "Research-stage physicochemical prescreening of pure hydrocarbon molecules only; not external validation, finished-fuel certification, sustainability assessment, or engine-performance verification.",
+  "artifact_generated_at_utc": "2026-08-31T15:03:44.071220+00:00",
+  "source_artifact_identifiers": {
+    "private_source_workbook_sha256": "584ff1ba94401a00ffd9197808ade834314183c87adde2422dc33d7aa685c897",
+    "private_joblib_sha256": "e5a648cba47e0ba98e902144e45b937610f82c0d96719b4ef248cf3ab903ef73",
+    "private_browser_model_bundle_js_sha256": "37146ab167a02c560b40f5296b62cf48cab8f9ea1abb2ec70db34bc59b89fa2f",
+    "original_wide_holdout_predictions_sha256": "040a212e0ff390af7d7ec8a0e68e7c77c5c19b09d2bbd3c6b274a5b245e19018"
+  },
+  "public_deidentified_artifacts": {
+    "deidentification_boundary": "Molecule names, molecular formulae, original development-record identifiers, and bilingual display metadata were removed. X01-X07 vectors remain for applicability-domain calculations and may be linkable to a known source dataset.",
+    "joblib_path": "models/SAF_Predict_public_model_bundle_v1.joblib",
+    "joblib_sha256": "d4ecab30c318d1923f27b7f0acb1fb117510edb5a603857903d6568c736477a7",
+    "browser_model_bundle_js_path": "model_bundle.js",
+    "browser_model_bundle_js_sha256": "d8cca36e6ea10bccb25d725d791317fb7958c4999610e1eea3cbd76c85c741f2",
+    "model_bundle_json_path": "models/model_bundle.json",
+    "model_bundle_json_sha256": "93003b6d25338b0096d20b8d0d29612dc2a54b2e3798a9a4a18a73e38f0dbffe",
+    "wide_holdout_predictions_path": "validation/held_out_predictions.csv",
+    "wide_holdout_predictions_sha256": "0c33f25d14867300b76e85c22d318d04c9c4653798554201c9bfab3758f405a4",
+    "long_holdout_predictions_path": "validation/held_out_test_predictions_long.csv",
+    "long_holdout_predictions_sha256": "18eadf1f77c0c7ecbd248055974d3556c9840af3683cb3cdb8ec9d696e748cc1",
+    "sanitization_check_path": "models/public_artifact_sanitization_checks.json",
+    "sanitization_check_sha256": "c58cfd963fab1ca28f8a8fc1eef84398dde96c2221feb809d6129d2bae9da2a2",
+    "hash_status": "Public artifact hashes populated after metadata reduction and semantic-equivalence checks."
+  },
+  "recorded_best_parameters": {
+    "Y01": {
+      "max_depth": 8,
+      "max_features": 1.0,
+      "min_samples_leaf": 3
+    },
+    "Y03": {
+      "regressor__regressor__C": 10.0,
+      "regressor__regressor__epsilon": 0.1,
+      "regressor__regressor__gamma": 0.1
+    },
+    "Y04": {
+      "learning_rate": 0.1,
+      "max_depth": 3,
+      "min_child_weight": 1,
+      "n_estimators": 200,
+      "subsample": 0.85
+    },
+    "Y05": {
+      "regressor__regressor__C": 100.0,
+      "regressor__regressor__epsilon": 0.05,
+      "regressor__regressor__gamma": 0.1
+    },
+    "Y06": {
+      "regressor__regressor__C": 100.0,
+      "regressor__regressor__epsilon": 0.05,
+      "regressor__regressor__gamma": 0.1
+    },
+    "Y07": {
+      "regressor__regressor__C": 10.0,
+      "regressor__regressor__epsilon": 0.05,
+      "regressor__regressor__gamma": 0.1
+    }
+  }
+}

@@ -1,0 +1,154 @@
+{
+  "model_name": "SAF-Predict",
+  "version": "1.0.0",
+  "generated_at_utc": "2026-08-31T15:03:44.071220+00:00",
+  "purpose": "Preliminary physicochemical screening of pure SAF-relevant hydrocarbons from seven molecular descriptors.",
+  "metadata_scope": "Author-provided analysis metadata and current artifact identifiers; not an independent audit or proof of pre-evaluation chronology.",
+  "development_data": {
+    "sheet": "Sheet1",
+    "records": 300,
+    "formula_groups": 73,
+    "recorded_source_workbook_sha256": "584ff1ba94401a00ffd9197808ade834314183c87adde2422dc33d7aa685c897",
+    "recorded_fold_manifest_sha256": "2a4afdfe8fa4f973ae2c51776883121935493eff0a268171b0970cad37d194c9",
+    "recorded_oof_predictions_sha256": "16e705a986b9adc140792fad8bd9571238677b77cc5b506e50808f676491174f",
+    "held_out_role": "Sheet2, n=10, internal held-out test set",
+    "author_reported_held_out_sheet_excluded_from_model_development": true
+  },
+  "deployment_models": {
+    "Y01": "RF",
+    "Y03": "SVR",
+    "Y04": "XGBoost",
+    "Y05": "SVR",
+    "Y06": "SVR",
+    "Y07": "SVR",
+    "Y02": "derived: predicted Y01 × predicted Y03"
+  },
+  "input_definitions": {
+    "X01": {
+      "name": "Molar mass",
+      "unit": "g mol−1",
+      "definition": "RDKit Descriptors.MolWt average molecular mass",
+      "step": 0.001
+    },
+    "X02": {
+      "name": "H/C atomic ratio",
+      "unit": "1",
+      "definition": "Hydrogen atom count divided by carbon atom count",
+      "step": 0.001
+    },
+    "X03": {
+      "name": "Aromatic carbon fraction",
+      "unit": "0–1",
+      "definition": "Aromatic carbon count divided by total carbon count",
+      "step": 0.001
+    },
+    "X04": {
+      "name": "Ring count",
+      "unit": "count",
+      "definition": "RDKit CalcNumRings",
+      "step": 1
+    },
+    "X05": {
+      "name": "Branching-carbon count",
+      "unit": "count",
+      "definition": "Carbon atoms directly connected to at least three carbon atoms",
+      "step": 1
+    },
+    "X06": {
+      "name": "Graph-automorphism descriptor",
+      "unit": "1",
+      "definition": "ln(1 + graph automorphism match count), ignoring stereochemistry",
+      "step": 0.001
+    },
+    "X07": {
+      "name": "Kier κ2 shape index",
+      "unit": "1",
+      "definition": "RDKit GraphDescriptors.Kappa2",
+      "step": 0.001
+    }
+  },
+  "output_definitions": {
+    "Y01": {
+      "name": "Mass-based net heat of combustion",
+      "unit": "MJ kg−1",
+      "digits": 2
+    },
+    "Y02": {
+      "name": "Volumetric net heat of combustion",
+      "unit": "MJ L−1",
+      "digits": 2
+    },
+    "Y03": {
+      "name": "Density",
+      "unit": "g cm−3",
+      "digits": 4
+    },
+    "Y04": {
+      "name": "Solid–liquid phase-transition temperature",
+      "unit": "°C",
+      "digits": 1
+    },
+    "Y05": {
+      "name": "Boiling point",
+      "unit": "°C",
+      "digits": 1
+    },
+    "Y06": {
+      "name": "Flash point",
+      "unit": "°C",
+      "digits": 1
+    },
+    "Y07": {
+      "name": "Kinematic viscosity at 40 °C",
+      "unit": "mm² s−1",
+      "digits": 3
+    }
+  },
+  "recorded_interval_method": "90% and 95% empirical prediction intervals from formula-group maxima of nested-CV OOF absolute residuals; these are not Bayesian posterior intervals or coverage guarantees for an individual molecule.",
+  "recorded_descriptor_distance_method": "mean L1 distance after median and 5th–95th percentile scaling",
+  "limitations": [
+    "In the authors' curation schema, labels are categorized as source-supported, formula-derived, or constructed. The record-level provenance table is not included in this software-only repository, so these categories cannot be independently traced here to condition-matched measurements.",
+    "The model is intended for neutral, single-component hydrocarbon molecules with descriptors computed using the documented definitions.",
+    "Solid–liquid phase-transition temperature is not the freezing point of a finished fuel blend.",
+    "Kinematic viscosity is defined at 40 °C and is not a low-temperature aviation-fuel viscosity specification.",
+    "Boiling point is a pure-component property, not a finished-fuel distillation curve.",
+    "Predictions do not establish conformity with ASTM specifications, finished-fuel suitability, sustainability, synthetic feasibility, safety, cost, emissions or engine performance.",
+    "According to the curation metadata, density and flash-point labels retain heterogeneous source conditions rather than one standardized certification method. The full condition table is outside this software-only release.",
+    "The ten-record Sheet2 set is an internal held-out test set, not independent external or prospective validation.",
+    "Nine of the ten held-out records, representing eight of nine unique formulae, share a molecular formula with the development set.",
+    "Y04 performed poorly on the internal holdout (R² = −0.021; MAE = 25.2 °C; n = 10). Do not use Y04 alone to rank or select compounds; experimental confirmation is required."
+  ],
+  "software_versions": {
+    "python": "3.12.13",
+    "numpy": "2.5.2",
+    "pandas": "3.0.5",
+    "scipy": "1.18.1",
+    "scikit_learn": "1.9.0",
+    "xgboost": "3.4.1",
+    "joblib": "1.5.3"
+  },
+  "artifact_identifiers": {
+    "private_source": {
+      "joblib_sha256": "e5a648cba47e0ba98e902144e45b937610f82c0d96719b4ef248cf3ab903ef73",
+      "browser_model_bundle_js_sha256": "37146ab167a02c560b40f5296b62cf48cab8f9ea1abb2ec70db34bc59b89fa2f",
+      "original_wide_holdout_predictions_sha256": "040a212e0ff390af7d7ec8a0e68e7c77c5c19b09d2bbd3c6b274a5b245e19018"
+    },
+    "public_deidentified_release": {
+      "deidentification_boundary": "Molecule names, molecular formulae, original development-record identifiers, and bilingual display metadata were removed. X01-X07 vectors remain for applicability-domain calculations and may be linkable to a known source dataset.",
+      "joblib_path": "models/SAF_Predict_public_model_bundle_v1.joblib",
+      "joblib_sha256": "d4ecab30c318d1923f27b7f0acb1fb117510edb5a603857903d6568c736477a7",
+      "browser_model_bundle_js_path": "model_bundle.js",
+      "browser_model_bundle_js_sha256": "d8cca36e6ea10bccb25d725d791317fb7958c4999610e1eea3cbd76c85c741f2",
+      "model_bundle_json_path": "models/model_bundle.json",
+      "model_bundle_json_sha256": "93003b6d25338b0096d20b8d0d29612dc2a54b2e3798a9a4a18a73e38f0dbffe",
+      "wide_holdout_predictions_path": "validation/held_out_predictions.csv",
+      "wide_holdout_predictions_sha256": "0c33f25d14867300b76e85c22d318d04c9c4653798554201c9bfab3758f405a4",
+      "long_holdout_predictions_path": "validation/held_out_test_predictions_long.csv",
+      "long_holdout_predictions_sha256": "18eadf1f77c0c7ecbd248055974d3556c9840af3683cb3cdb8ec9d696e748cc1",
+      "sanitization_check_path": "models/public_artifact_sanitization_checks.json",
+      "sanitization_check_sha256": "c58cfd963fab1ca28f8a8fc1eef84398dde96c2221feb809d6129d2bae9da2a2",
+      "hash_status": "Public artifact hashes populated after metadata reduction and semantic-equivalence checks."
+    }
+  },
+  "chronology_note": "The repository contains no independently timestamped pre-evaluation model release. Statements about exclusion of Sheet2 from tuning and absence of post-test refitting are author-reported workflow metadata."
+}

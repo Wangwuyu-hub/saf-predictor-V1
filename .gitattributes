@@ -1,0 +1,16 @@
+# Keep source files readable and line endings deterministic in repository archives.
+* text=auto eol=lf
+
+# Preserve serialized and checksum-addressed artifacts byte for byte.
+*.joblib binary
+*.bat -text
+model_bundle.js -text
+held_out_test_data.js -text
+models/model_bundle.json -text
+models/*.json -text
+validation/*.csv -text
+validation/*.json -text
+examples/*.csv -text
+checksums.sha256 -text
+release_manifest.json -text
+RELEASE_CHECKS.json -text

@@ -1,0 +1,59 @@
+{
+  "platform": "SAF-Predict",
+  "version": "1.0.0",
+  "generated_at_utc": "2026-09-01T14:01:50.513676+00:00",
+  "check_scope": "Released-file integrity and internal consistency only; not an independent audit, browser/operating-system compatibility certification, or proof of analysis chronology.",
+  "all_listed_checks_passed": true,
+  "checks": {
+    "required_release_files_present": true,
+    "public_joblib_hash_matches_artifact_manifest": true,
+    "public_browser_bundle_hash_matches_artifact_manifest": true,
+    "public_model_json_hash_matches_artifact_manifest": true,
+    "public_wide_prediction_hash_matches_artifact_manifest": true,
+    "public_long_prediction_hash_matches_artifact_manifest": true,
+    "public_sanitization_check_hash_matches_artifact_manifest": true,
+    "public_sanitization_record_reports_scoped_semantic_equivalence": true,
+    "public_browser_bundle_metadata_reduced": true,
+    "private_source_joblib_absent_from_public_release": true,
+    "validation_nearest_development_metadata_reduced": true,
+    "held_out_metrics_hash_matches_evaluation_checks": true,
+    "held_out_summary_hash_matches_evaluation_checks": true,
+    "held_out_prediction_rows_equal_10": true,
+    "held_out_record_property_rows_equal_70": true,
+    "held_out_metric_rows_equal_7": true,
+    "y02_identity_holds_within_1e-12": true,
+    "javascript_matches_stored_python_reference_on_six_cases": true,
+    "local_html_references_resolve": true,
+    "release_text_has_no_placeholder_or_local_path_markers": true,
+    "release_text_has_no_cjk_metadata": true,
+    "generated_report_has_no_malformed_empty_class_attribute": true
+  },
+  "details": {
+    "missing_required_files": [],
+    "held_out_prediction_rows": 10,
+    "held_out_record_property_rows": 70,
+    "held_out_metric_rows": 7,
+    "y02_max_abs_error": 0.0,
+    "html_references_checked": 28,
+    "missing_html_references": [],
+    "placeholder_or_local_path_marker_files": [],
+    "cjk_metadata_files": [],
+    "javascript_python_six_case_agreement_output": "{\n  \"sixCaseReferenceAgreementPassed\": true,\n  \"referenceCases\": 6,\n  \"targets\": 7,\n  \"maximumDifference\": 0.00005162659489599264,\n  \"comparison\": \"JavaScript predictions against six stored Python reference cases\",\n  \"publicDevelopmentRecordChecks\": {\n    \"records\": 300,\n    \"uniqueSurrogateIds\": 300,\n    \"retainedFields\": [\n      \"record_id\",\n      \"x\"\n    ],\n    \"bilingualDisplayMetadataRemoved\": true\n  }\n}",
+    "computed_public_artifact_sha256": {
+      "joblib": "d4ecab30c318d1923f27b7f0acb1fb117510edb5a603857903d6568c736477a7",
+      "browser_model_bundle_js": "d8cca36e6ea10bccb25d725d791317fb7958c4999610e1eea3cbd76c85c741f2",
+      "model_bundle_json": "93003b6d25338b0096d20b8d0d29612dc2a54b2e3798a9a4a18a73e38f0dbffe",
+      "wide_holdout_predictions": "0c33f25d14867300b76e85c22d318d04c9c4653798554201c9bfab3758f405a4",
+      "long_holdout_predictions": "18eadf1f77c0c7ecbd248055974d3556c9840af3683cb3cdb8ec9d696e748cc1"
+    }
+  },
+  "author_reported_analysis_design": {
+    "development_data": "Sheet1 n=300",
+    "held_out_role": "Sheet2 n=10, internal held-out test set",
+    "sheet2_used_for_tuning": false,
+    "post_test_refitting_performed": false,
+    "independently_timestamped_pre_evaluation_release_present_in_repository": false,
+    "note": "These are author-reported workflow statements and are not automated integrity-check results."
+  },
+  "y02_rule": "predicted Y01 multiplied by predicted Y03"
+}
