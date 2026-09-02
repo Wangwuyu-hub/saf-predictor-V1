@@ -1,0 +1,27 @@
+{
+  "title": "SAF-Predict: Descriptor-Based Physicochemical Property Prediction for Hydrocarbon Fuel Candidates",
+  "upload_type": "software",
+  "access_right": "open",
+  "license": "mit",
+  "description": "Version 1.0.0 of SAF-Predict. The archived repository contains an offline browser predictor, trained model artifacts, a 300-record development set, a 10-record structurally stratified internal held-out test set, record-property provenance, reference metadata, grouped nested-cross-validation artifacts, and scripts for descriptor verification, training, export, and held-out evaluation. Code is MIT-licensed. Project-authored data curation is offered under CC BY 4.0 to the extent rights are held; third-party source material is not relicensed and remains subject to original source terms. The held-out set is not independent external validation, and the solid-liquid phase-transition model requires experimental confirmation.",
+  "creators": [
+    {
+      "name": "SAF-Predict contributors"
+    }
+  ],
+  "keywords": [
+    "sustainable aviation fuel",
+    "physicochemical property prediction",
+    "interpretable machine learning",
+    "hydrocarbon",
+    "grouped cross-validation",
+    "applicability domain"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/Wangwuyu-hub/saf-predictor-V1",
+      "relation": "isSupplementTo",
+      "resource_type": "software"
+    }
+  ]
+}

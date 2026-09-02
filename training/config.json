@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "base_seed": 20260831,
+  "outer_folds": 5,
+  "inner_folds": 3,
+  "final_cv_folds": 5,
+  "selection_scoring": "neg_root_mean_squared_error",
+  "model_order": [
+    "XGBoost",
+    "RF",
+    "SVR",
+    "ANN"
+  ],
+  "deployment_models": {
+    "Y01": "RF",
+    "Y03": "SVR",
+    "Y04": "XGBoost",
+    "Y05": "SVR",
+    "Y06": "SVR",
+    "Y07": "SVR"
+  },
+  "final_fit_target_order": [
+    "Y01",
+    "Y03",
+    "Y04",
+    "Y05",
+    "Y06",
+    "Y07"
+  ],
+  "seed_policy": {
+    "nested_cv": "base_seed + 100 * target_index + 10 * model_index + outer_fold_number; target_index/model_index are zero-based in model_order and outer_fold_number is 1..5",
+    "final_fit": "base_seed + 9000 + deployment_index; deployment_index is zero-based in final_fit_target_order"
+  },
+  "provenance_reconstruction": {
+    "reference_map_column": "reference_map",
+    "formula_derived_reference_by_target": {
+      "Y01": "REF-0001",
+      "Y03": "REF-0001",
+      "Y04": "REF-0002",
+      "Y05": "REF-0002",
+      "Y06": "REF-0481",
+      "Y07": "REF-0482"
+    }
+  },
+  "fixed_parameters": {
+    "XGBoost": {
+      "objective": "reg:squarederror",
+      "tree_method": "hist",
+      "colsample_bytree": 0.8,
+      "reg_lambda": 1.0,
+      "reg_alpha": 0.0,
+      "n_jobs": 1,
+      "verbosity": 0
+    },
+    "RF": {
+      "n_estimators": 500,
+      "bootstrap": true,
+      "n_jobs": 1
+    },
+    "SVR": {
+      "kernel": "rbf"
+    },
+    "ANN": {
+      "solver": "lbfgs",
+      "max_iter": 5000,
+      "max_fun": 50000
+    }
+  },
+  "parameter_grids": {
+    "XGBoost": [
+      {
+        "learning_rate": [0.03],
+        "n_estimators": [500],
+        "max_depth": [2, 3],
+        "min_child_weight": [1, 5],
+        "subsample": [0.85]
+      },
+      {
+        "learning_rate": [0.1],
+        "n_estimators": [200],
+        "max_depth": [2, 3],
+        "min_child_weight": [1, 5],
+        "subsample": [0.85]
+      }
+    ],
+    "RF": {
+      "max_depth": [null, 8],
+      "min_samples_leaf": [1, 3],
+      "max_features": ["sqrt", 1.0]
+    },
+    "SVR": {
+      "regressor__regressor__C": [1.0, 10.0, 100.0],
+      "regressor__regressor__gamma": ["scale", 0.1],
+      "regressor__regressor__epsilon": [0.05, 0.1]
+    },
+    "ANN": {
+      "regressor__regressor__hidden_layer_sizes": [[16], [32, 16]],
+      "regressor__regressor__activation": ["tanh", "relu"],
+      "regressor__regressor__alpha": [0.0001, 0.01]
+    }
+  }
+}

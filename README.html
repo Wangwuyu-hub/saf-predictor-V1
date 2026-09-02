@@ -49,7 +49,7 @@
         <li>The model applies only to pure hydrocarbon molecules represented using the documented descriptor definitions; it does not apply to mixtures, finished fuels, heteroatom-containing compounds, ions, or polymers.</li>
         <li>Y02 is calculated from predicted Y01 × predicted Y03 rather than fitted independently.</li>
         <li>Y04 is the pure-compound solid–liquid phase-transition temperature, not the freezing point of a finished fuel; Y05 is not a distillation curve, and Y07 is not a low-temperature aviation-fuel viscosity specification.</li>
-        <li><code>source-supported</code>, <code>formula-derived</code>, and <code>constructed</code> are author-assigned curation categories for the development labels. Source-supported denotes a traceable literature or database entry, not necessarily a direct, condition-matched experiment. The record-level provenance table is not included in this software-only repository.</li>
+        <li>This release is a provenance-aware hybrid dataset, not an all-experimental database. Record-property value origins, source links, and retained condition or method notes are provided in <a href="data/provenance_long.csv">data/provenance_long.csv</a> and <a href="data/references.csv">data/references.csv</a>.</li>
         <li>Nine of the ten records in the internal holdout set (eight of nine unique molecular formulae) share a formula with the development set. This internal holdout evaluation is not independent external, prospective, or experimental validation.</li>
         <li>The applicability-domain (AD) distance percentile reports position in the development-set reference-distance distribution; it is not a calibrated prediction-error probability.</li>
         <li>The application predicts pure-compound physicochemical properties only. It does not assess fuel-specification compliance, blend performance, sustainability, synthesis, safety, emissions, cost, or engine performance.</li>
@@ -59,9 +59,9 @@
     <section class="card">
       <h2>Traceability and release artifacts</h2>
       <p>This release includes the browser application, fixed serialized model artifacts, internal holdout evaluation outputs, and release checks. According to the recorded workflow, model and hyperparameter selection used the development set before the internal holdout evaluation. Current hashes identify artifacts but do not independently establish pre-evaluation chronology.</p>
-      <p>The public model artifacts omit molecule names, molecular formulae, original development-record identifiers, and bilingual display metadata. X01–X07 development vectors remain for nearest-neighbour applicability-domain calculations and may be linkable to a known source dataset. This software-only repository is not a complete model-development reproducibility archive.</p>
+      <p>The serialized public model object omits molecule names, molecular formulae, original development-record identifiers, and bilingual display metadata. X01–X07 development vectors remain for nearest-neighbour applicability-domain calculations. The repository separately provides the development and held-out data, record-property provenance, reference registry, fixed grouped folds, training workflow, environment files, and evaluation checks.</p>
       <p><a href="held_out_test_data.js">Internal holdout data used by the interface</a> · <a href="tests/test_js_against_python_reference_cases.js">JavaScript reference-case test</a> · <a href="release_manifest.json">Release manifest</a></p>
-      <p>No open-source license is included in v1.0.0. Unless a license is added, copyright law reserves all rights. The release does not grant redistribution rights for source records compiled from third-party publications or databases.</p>
+      <p>The source code is released under the MIT License. Project-authored data curation is offered under CC BY 4.0 to the extent rights are held; third-party source material is not relicensed. See <a href="LICENSE">LICENSE</a> and <a href="DATA_LICENSE.md">DATA_LICENSE.md</a>.</p>
     </section>
   </main>
 </body>

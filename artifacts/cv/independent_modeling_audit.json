@@ -1,0 +1,507 @@
+{
+  "pass": true,
+  "generated_at_utc": "2026-08-30T16:25:25.514079+00:00",
+  "scope": {
+    "training_sheet": "Sheet1",
+    "training_records": 300,
+    "held_out_sheet": "Sheet2",
+    "held_out_records": 10,
+    "inputs": [
+      "X01",
+      "X02",
+      "X03",
+      "X04",
+      "X05",
+      "X06",
+      "X07"
+    ],
+    "targets": [
+      "Y01",
+      "Y02",
+      "Y03",
+      "Y04",
+      "Y05",
+      "Y06",
+      "Y07"
+    ],
+    "models": [
+      "XGBoost",
+      "RF",
+      "SVR",
+      "ANN"
+    ],
+    "outer_folds": 5
+  },
+  "checks": {
+    "all_required_modeling_artifacts_present": true,
+    "all_figure4_csv_json_parse": true,
+    "workbook_required_columns_present": true,
+    "sheet1_rows_300": true,
+    "sheet2_rows_10": true,
+    "sheet1_record_ids_valid_unique": true,
+    "sheet2_record_ids_valid_unique": true,
+    "sheet1_sheet2_ids_disjoint": true,
+    "sheet1_all_inputs_targets_finite": true,
+    "fold_manifest_exact_300_unique_sheet1_ids": true,
+    "fold_manifest_fold_counts_60_each": true,
+    "sheet2_ids_absent_from_fold_manifest": true,
+    "fold_manifest_formula_matches_sheet1": true,
+    "outer_formula_group_overlap_zero": true,
+    "each_formula_assigned_to_one_outer_fold": true,
+    "fold_scores_required_columns_present": true,
+    "fold_scores_rows_140": true,
+    "fold_scores_complete_cartesian_product": true,
+    "fold_scores_model_set_exact": true,
+    "fold_scores_target_set_exact": true,
+    "fold_scores_n_train_240_n_test_60": true,
+    "fold_scores_report_formula_overlap_zero": true,
+    "fold_score_formula_group_counts_match_manifest": true,
+    "fold_score_numeric_fields_finite": true,
+    "oof_required_columns_present": true,
+    "oof_rows_8400": true,
+    "oof_model_set_exact": true,
+    "oof_target_set_exact": true,
+    "oof_unique_model_target_record_keys": true,
+    "oof_300_unique_ids_per_model_target": true,
+    "oof_60_predictions_per_model_target_fold": true,
+    "oof_every_block_has_exact_sheet1_ids": true,
+    "sheet2_ids_absent_from_oof": true,
+    "oof_numeric_values_finite": true,
+    "oof_outer_fold_matches_manifest": true,
+    "oof_formula_matches_manifest": true,
+    "oof_y_true_matches_sheet1_target_values": true,
+    "oof_residual_recalculates": true,
+    "fold_metric_blocks_have_60_oof_rows": true,
+    "fold_r2_recalculates_from_oof": true,
+    "fold_rmse_recalculates_from_oof": true,
+    "fold_mae_recalculates_from_oof": true,
+    "summary_required_columns_present": true,
+    "summary_complete_28_model_target_rows": true,
+    "summary_metrics_recalculate": true,
+    "summary_ranks_recalculate": true,
+    "provenance_metrics_cover_300_per_model_target": true,
+    "provenance_model_target_sets_exact": true,
+    "sensitivity_expected_8_rows": true,
+    "protocol_scope_and_model_sets_exact": true,
+    "upstream_modeling_qa_passed": true,
+    "upstream_qa_hashes_match_current_files": true,
+    "input_artifacts_stable_during_audit": true
+  },
+  "failed_checks": [],
+  "details": {
+    "all_required_modeling_artifacts_present": [],
+    "sheet1_rows_300": 300,
+    "sheet2_rows_10": 10,
+    "fold_manifest_fold_counts_60_each": {
+      "1": 60,
+      "2": 60,
+      "3": 60,
+      "4": 60,
+      "5": 60
+    },
+    "outer_formula_group_overlap_zero": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0
+    },
+    "fold_scores_rows_140": 140,
+    "fold_scores_complete_cartesian_product": {
+      "missing": [],
+      "unexpected": []
+    },
+    "oof_rows_8400": 8400,
+    "oof_y_true_matches_sheet1_target_values": {
+      "max_abs_error": 7.105427357601002e-15
+    },
+    "oof_residual_recalculates": {
+      "max_abs_error": 5.684341886080802e-14
+    },
+    "fold_r2_recalculates_from_oof": {
+      "max_abs_error": 7.979727989493313e-16
+    },
+    "fold_rmse_recalculates_from_oof": {
+      "max_abs_error": 7.105427357601002e-15
+    },
+    "fold_mae_recalculates_from_oof": {
+      "max_abs_error": 7.105427357601002e-15
+    },
+    "summary_complete_28_model_target_rows": {
+      "missing": [],
+      "unexpected": []
+    },
+    "summary_metrics_recalculate": {
+      "per_metric_match": {
+        "mean_fold_r2": true,
+        "sd_fold_r2": true,
+        "median_fold_r2": true,
+        "min_fold_r2": true,
+        "max_fold_r2": true,
+        "oof_r2": true,
+        "oof_rmse": true,
+        "oof_mae": true
+      },
+      "max_abs_error": {
+        "mean_fold_r2": 1.1102230246251565e-16,
+        "sd_fold_r2": 8.673617379884035e-17,
+        "median_fold_r2": 0.0,
+        "min_fold_r2": 0.0,
+        "max_fold_r2": 0.0,
+        "oof_r2": 1.1102230246251565e-16,
+        "oof_rmse": 1.1102230246251565e-16,
+        "oof_mae": 3.552713678800501e-15
+      }
+    },
+    "protocol_scope_and_model_sets_exact": {
+      "data_sheet": true,
+      "n_records": true,
+      "inputs": true,
+      "targets": true,
+      "held_out_sheet": true,
+      "held_out_used": true,
+      "models": true
+    },
+    "upstream_qa_hashes_match_current_files": {
+      "fold_manifest_sha256": true,
+      "fold_scores_sha256": true,
+      "oof_sha256": true,
+      "summary_sha256": true
+    },
+    "artifact_inventory": {
+      "Figure4_cv_protocol.json": {
+        "bytes": 2903,
+        "mtime_ns": 1788107100887338200,
+        "sha256": "83f5dfff30469e1b4b33ddfd19e22d6ef8c7a9ecdeaca8de4b6922cacacc3768",
+        "type": "json",
+        "top_level_keys": [
+          "base_seed",
+          "data_sheet",
+          "held_out_sheet",
+          "held_out_used",
+          "inner_cv",
+          "inner_selection_metric",
+          "inputs",
+          "models",
+          "n_records",
+          "outer_cv",
+          "outer_dispersion",
+          "outer_primary_metric",
+          "supporting_metrics",
+          "targets",
+          "versions"
+        ]
+      },
+      "Figure4_fold_manifest.csv": {
+        "bytes": 11434,
+        "mtime_ns": 1788107100887338200,
+        "sha256": "2a4afdfe8fa4f973ae2c51776883121935493eff0a268171b0970cad37d194c9",
+        "type": "csv",
+        "rows": 300,
+        "columns": [
+          "record_id",
+          "molecule",
+          "molecular_formula",
+          "outer_fold"
+        ]
+      },
+      "Figure4_model_target_summary.csv": {
+        "bytes": 5658,
+        "mtime_ns": 1788107101515217700,
+        "sha256": "d7a375b16677033a48f99508d4a7e2e28e80720e3b0bee282728077daff53ce5",
+        "type": "csv",
+        "rows": 28,
+        "columns": [
+          "model",
+          "target",
+          "property",
+          "unit",
+          "mean_fold_r2",
+          "sd_fold_r2",
+          "median_fold_r2",
+          "min_fold_r2",
+          "max_fold_r2",
+          "oof_r2",
+          "oof_rmse",
+          "oof_mae",
+          "rank_by_mean_fold_r2"
+        ]
+      },
+      "Figure4_modeling_QA.json": {
+        "bytes": 1590,
+        "mtime_ns": 1788107102148070900,
+        "sha256": "8edb085f0025c7016660f1efb629aab23f1b303869936f0cb13a78fe5b1a1667",
+        "type": "json",
+        "top_level_keys": [
+          "checks",
+          "files",
+          "fold_score_rows",
+          "fold_sizes",
+          "model_versions",
+          "oof_rows",
+          "pass",
+          "summary_rows",
+          "unique_formulae"
+        ]
+      },
+      "Figure4_oof_predictions.csv": {
+        "bytes": 1190261,
+        "mtime_ns": 1788107100885337200,
+        "sha256": "16e705a986b9adc140792fad8bd9571238677b77cc5b506e50808f676491174f",
+        "type": "csv",
+        "rows": 8400,
+        "columns": [
+          "record_id",
+          "molecule",
+          "molecular_formula",
+          "outer_fold",
+          "model",
+          "target",
+          "property",
+          "unit",
+          "y_true",
+          "y_pred",
+          "residual",
+          "provenance_class"
+        ]
+      },
+      "Figure4_outer_fold_scores.csv": {
+        "bytes": 39139,
+        "mtime_ns": 1788107100811576300,
+        "sha256": "6b6f7cd293ff5c409d33dee397ccac326ce540677635bc0ff827c0080d38f202",
+        "type": "csv",
+        "rows": 140,
+        "columns": [
+          "model",
+          "target",
+          "property",
+          "unit",
+          "outer_fold",
+          "n_train",
+          "n_test",
+          "train_formula_groups",
+          "test_formula_groups",
+          "formula_overlap",
+          "r2",
+          "rmse",
+          "mae",
+          "best_inner_rmse",
+          "best_params",
+          "random_seed",
+          "fit_seconds",
+          "warning_count"
+        ]
+      },
+      "Figure4_provenance_stratified_metrics.csv": {
+        "bytes": 5846,
+        "mtime_ns": 1788107101517217900,
+        "sha256": "be44ef38bc2b14e3c1b346e1c5f0b8222a62fdf67157bb30efee4ff38c12a903",
+        "type": "csv",
+        "rows": 52,
+        "columns": [
+          "model",
+          "target",
+          "property",
+          "provenance_class",
+          "n",
+          "r2",
+          "rmse",
+          "mae"
+        ]
+      },
+      "Figure4_volumetric_NHOC_sensitivity.csv": {
+        "bytes": 834,
+        "mtime_ns": 1788107101518726500,
+        "sha256": "07d71de2ab6f989a5593aac91eccbe33cd4d008b07fd643394272f20551cc753",
+        "type": "csv",
+        "rows": 8,
+        "columns": [
+          "model",
+          "approach",
+          "n",
+          "oof_r2",
+          "oof_rmse",
+          "oof_mae"
+        ]
+      }
+    },
+    "expected_counts": {
+      "sheet1_records": 300,
+      "sheet2_records": 10,
+      "outer_fold_scores": 140,
+      "oof_predictions": 8400,
+      "summary_rows": 28
+    }
+  },
+  "artifacts": {
+    "Figure4_cv_protocol.json": {
+      "bytes": 2903,
+      "mtime_ns": 1788107100887338200,
+      "sha256": "83f5dfff30469e1b4b33ddfd19e22d6ef8c7a9ecdeaca8de4b6922cacacc3768",
+      "type": "json",
+      "top_level_keys": [
+        "base_seed",
+        "data_sheet",
+        "held_out_sheet",
+        "held_out_used",
+        "inner_cv",
+        "inner_selection_metric",
+        "inputs",
+        "models",
+        "n_records",
+        "outer_cv",
+        "outer_dispersion",
+        "outer_primary_metric",
+        "supporting_metrics",
+        "targets",
+        "versions"
+      ]
+    },
+    "Figure4_fold_manifest.csv": {
+      "bytes": 11434,
+      "mtime_ns": 1788107100887338200,
+      "sha256": "2a4afdfe8fa4f973ae2c51776883121935493eff0a268171b0970cad37d194c9",
+      "type": "csv",
+      "rows": 300,
+      "columns": [
+        "record_id",
+        "molecule",
+        "molecular_formula",
+        "outer_fold"
+      ]
+    },
+    "Figure4_model_target_summary.csv": {
+      "bytes": 5658,
+      "mtime_ns": 1788107101515217700,
+      "sha256": "d7a375b16677033a48f99508d4a7e2e28e80720e3b0bee282728077daff53ce5",
+      "type": "csv",
+      "rows": 28,
+      "columns": [
+        "model",
+        "target",
+        "property",
+        "unit",
+        "mean_fold_r2",
+        "sd_fold_r2",
+        "median_fold_r2",
+        "min_fold_r2",
+        "max_fold_r2",
+        "oof_r2",
+        "oof_rmse",
+        "oof_mae",
+        "rank_by_mean_fold_r2"
+      ]
+    },
+    "Figure4_modeling_QA.json": {
+      "bytes": 1590,
+      "mtime_ns": 1788107102148070900,
+      "sha256": "8edb085f0025c7016660f1efb629aab23f1b303869936f0cb13a78fe5b1a1667",
+      "type": "json",
+      "top_level_keys": [
+        "checks",
+        "files",
+        "fold_score_rows",
+        "fold_sizes",
+        "model_versions",
+        "oof_rows",
+        "pass",
+        "summary_rows",
+        "unique_formulae"
+      ]
+    },
+    "Figure4_oof_predictions.csv": {
+      "bytes": 1190261,
+      "mtime_ns": 1788107100885337200,
+      "sha256": "16e705a986b9adc140792fad8bd9571238677b77cc5b506e50808f676491174f",
+      "type": "csv",
+      "rows": 8400,
+      "columns": [
+        "record_id",
+        "molecule",
+        "molecular_formula",
+        "outer_fold",
+        "model",
+        "target",
+        "property",
+        "unit",
+        "y_true",
+        "y_pred",
+        "residual",
+        "provenance_class"
+      ]
+    },
+    "Figure4_outer_fold_scores.csv": {
+      "bytes": 39139,
+      "mtime_ns": 1788107100811576300,
+      "sha256": "6b6f7cd293ff5c409d33dee397ccac326ce540677635bc0ff827c0080d38f202",
+      "type": "csv",
+      "rows": 140,
+      "columns": [
+        "model",
+        "target",
+        "property",
+        "unit",
+        "outer_fold",
+        "n_train",
+        "n_test",
+        "train_formula_groups",
+        "test_formula_groups",
+        "formula_overlap",
+        "r2",
+        "rmse",
+        "mae",
+        "best_inner_rmse",
+        "best_params",
+        "random_seed",
+        "fit_seconds",
+        "warning_count"
+      ]
+    },
+    "Figure4_provenance_stratified_metrics.csv": {
+      "bytes": 5846,
+      "mtime_ns": 1788107101517217900,
+      "sha256": "be44ef38bc2b14e3c1b346e1c5f0b8222a62fdf67157bb30efee4ff38c12a903",
+      "type": "csv",
+      "rows": 52,
+      "columns": [
+        "model",
+        "target",
+        "property",
+        "provenance_class",
+        "n",
+        "r2",
+        "rmse",
+        "mae"
+      ]
+    },
+    "Figure4_volumetric_NHOC_sensitivity.csv": {
+      "bytes": 834,
+      "mtime_ns": 1788107101518726500,
+      "sha256": "07d71de2ab6f989a5593aac91eccbe33cd4d008b07fd643394272f20551cc753",
+      "type": "csv",
+      "rows": 8,
+      "columns": [
+        "model",
+        "approach",
+        "n",
+        "oof_r2",
+        "oof_rmse",
+        "oof_mae"
+      ]
+    }
+  },
+  "implementation_review": {
+    "status": "implementation_reviewed",
+    "assessment": "consistent_with_within_fold_scaling",
+    "evidence": {
+      "two_transformed_target_regressors_present": true,
+      "two_feature_scalers_inside_pipelines_present": true,
+      "two_target_scalers_present": true,
+      "grid_search_wraps_constructed_estimator": true,
+      "fit_uses_outer_training_subset": true,
+      "no_explicit_global_fit_transform": true
+    },
+    "included_in_empirical_pass": false,
+    "note": "The serialized CSV/JSON outputs do not contain fitted scaler state or inner-fold fit indices. This is a static review of run_nested_cv.py, not an empirical proof of scaler fit scope."
+  }
+}

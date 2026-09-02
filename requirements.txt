@@ -1,0 +1,7 @@
+joblib==1.5.3
+numpy==2.5.2
+pandas==3.0.5
+rdkit==2025.9.2
+scikit-learn==1.9.0
+scipy==1.18.1
+xgboost==3.4.1

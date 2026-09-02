@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use this software or its curated data, cite the version-specific Zenodo record and the associated article."
+title: "SAF-Predict: Descriptor-Based Physicochemical Property Prediction for Hydrocarbon Fuel Candidates"
+type: software
+version: 1.0.0
+date-released: 2026-09-02
+license: MIT
+repository-code: "https://github.com/Wangwuyu-hub/saf-predictor-V1"
+url: "https://github.com/Wangwuyu-hub/saf-predictor-V1"
+authors:
+  - name: "SAF-Predict contributors"
+keywords:
+  - sustainable aviation fuel
+  - physicochemical property prediction
+  - interpretable machine learning
+  - hydrocarbon
+  - grouped cross-validation
+  - applicability domain

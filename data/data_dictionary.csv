@@ -1,0 +1,96 @@
+﻿table,column,data_type,unit,description,allowed_values_or_rule,missing_value_policy
+development.csv,record_id,string,,Stable curation record identifier.,,not allowed
+development.csv,molecule_name,string,,Curated compound name; identity is anchored by structure fields.,,not allowed
+development.csv,cas_rn,string,,CAS Registry Number where unambiguously resolved.,,allowed; see cas_status
+development.csv,cas_status,categorical,,Reason/status for CAS availability.,reported | not available or not unambiguously resolved,not allowed
+development.csv,pubchem_cid,integer,,PubChem compound identifier where available.,,allowed
+development.csv,molecular_formula,string,,Molecular formula; also the grouped-CV blocking variable.,,not allowed
+development.csv,inchikey,string,,Full InChIKey identity field.,,not allowed
+development.csv,canonical_smiles,string,,Canonical SMILES used for descriptor audit.,,not allowed
+development.csv,partition,categorical,,Locked data role.,development | internal_heldout_test,not allowed
+development.csv,formula_group,string,,Molecular-formula grouping label used for GroupKFold.,,not allowed
+development.csv,component_scope,categorical,,Mixture/single-component classification.,pure single-component molecule,not allowed
+development.csv,elemental_scope,categorical,,Elemental class.,hydrocarbon (C/H only),not allowed
+development.csv,mixture_flag,boolean,,True only for multicomponent records.,false for every release record,not allowed
+development.csv,oxygenate_flag,boolean,,True only when oxygen is present.,false for every release record,not allowed
+development.csv,aromaticity_class,categorical,,Derived from aromatic-carbon fraction.,aromatic | non-aromatic,not allowed
+development.csv,structure_class,categorical,,Deterministic descriptor/SMILES-based structural class.,,not allowed
+development.csv,density_screening_flag_ge_0_90_g_cm3,boolean,,Descriptive screening flag; not a chemical identity class.,Y03 >= 0.90 g cm^-3,not allowed
+development.csv,X01,number,g mol^-1,RDKit Descriptors.MolWt average molecular mass.,,not allowed
+development.csv,X02,number,1,Hydrogen atom count divided by carbon atom count.,,not allowed
+development.csv,X03,number,0-1,Aromatic carbon atoms divided by all carbon atoms.,,not allowed
+development.csv,X04,number,count,RDKit CalcNumRings.,,not allowed
+development.csv,X05,number,count,Carbon atoms directly bonded to at least three carbon atoms.,,not allowed
+development.csv,X06,number,1,"ln(1 + graph automorphism match count), ignoring stereochemistry.",,not allowed
+development.csv,X07,number,1,RDKit Kier second-order shape index (Kappa2).,,not allowed
+development.csv,Y01,number,MJ kg^-1,Mass-based net heat of combustion.,,not allowed
+development.csv,Y02,number,MJ L^-1,Volumetric net heat of combustion.,,not allowed
+development.csv,Y03,number,g cm^-3,Density.,,not allowed
+development.csv,Y04,number,degC,Solid-liquid phase-transition temperature.,,not allowed
+development.csv,Y05,number,degC,Boiling point.,,not allowed
+development.csv,Y06,number,degC,Flash point.,,not allowed
+development.csv,Y07,number,mm^2 s^-1,Kinematic viscosity at 40 degC.,,not allowed
+development.csv,reference_map,string,,Per-variable mapping to entries in references.csv.,,not allowed
+held_out_test.csv,record_id,string,,Stable curation record identifier.,,not allowed
+held_out_test.csv,molecule_name,string,,Curated compound name; identity is anchored by structure fields.,,not allowed
+held_out_test.csv,cas_rn,string,,CAS Registry Number where unambiguously resolved.,,allowed; see cas_status
+held_out_test.csv,cas_status,categorical,,Reason/status for CAS availability.,reported | not available or not unambiguously resolved,not allowed
+held_out_test.csv,pubchem_cid,integer,,PubChem compound identifier where available.,,allowed
+held_out_test.csv,molecular_formula,string,,Molecular formula; also the grouped-CV blocking variable.,,not allowed
+held_out_test.csv,inchikey,string,,Full InChIKey identity field.,,not allowed
+held_out_test.csv,canonical_smiles,string,,Canonical SMILES used for descriptor audit.,,not allowed
+held_out_test.csv,partition,categorical,,Locked data role.,development | internal_heldout_test,not allowed
+held_out_test.csv,formula_group,string,,Molecular-formula grouping label used for GroupKFold.,,not allowed
+held_out_test.csv,component_scope,categorical,,Mixture/single-component classification.,pure single-component molecule,not allowed
+held_out_test.csv,elemental_scope,categorical,,Elemental class.,hydrocarbon (C/H only),not allowed
+held_out_test.csv,mixture_flag,boolean,,True only for multicomponent records.,false for every release record,not allowed
+held_out_test.csv,oxygenate_flag,boolean,,True only when oxygen is present.,false for every release record,not allowed
+held_out_test.csv,aromaticity_class,categorical,,Derived from aromatic-carbon fraction.,aromatic | non-aromatic,not allowed
+held_out_test.csv,structure_class,categorical,,Deterministic descriptor/SMILES-based structural class.,,not allowed
+held_out_test.csv,density_screening_flag_ge_0_90_g_cm3,boolean,,Descriptive screening flag; not a chemical identity class.,Y03 >= 0.90 g cm^-3,not allowed
+held_out_test.csv,X01,number,g mol^-1,RDKit Descriptors.MolWt average molecular mass.,,not allowed
+held_out_test.csv,X02,number,1,Hydrogen atom count divided by carbon atom count.,,not allowed
+held_out_test.csv,X03,number,0-1,Aromatic carbon atoms divided by all carbon atoms.,,not allowed
+held_out_test.csv,X04,number,count,RDKit CalcNumRings.,,not allowed
+held_out_test.csv,X05,number,count,Carbon atoms directly bonded to at least three carbon atoms.,,not allowed
+held_out_test.csv,X06,number,1,"ln(1 + graph automorphism match count), ignoring stereochemistry.",,not allowed
+held_out_test.csv,X07,number,1,RDKit Kier second-order shape index (Kappa2).,,not allowed
+held_out_test.csv,Y01,number,MJ kg^-1,Mass-based net heat of combustion.,,not allowed
+held_out_test.csv,Y02,number,MJ L^-1,Volumetric net heat of combustion.,,not allowed
+held_out_test.csv,Y03,number,g cm^-3,Density.,,not allowed
+held_out_test.csv,Y04,number,degC,Solid-liquid phase-transition temperature.,,not allowed
+held_out_test.csv,Y05,number,degC,Boiling point.,,not allowed
+held_out_test.csv,Y06,number,degC,Flash point.,,not allowed
+held_out_test.csv,Y07,number,mm^2 s^-1,Kinematic viscosity at 40 degC.,,not allowed
+held_out_test.csv,reference_map,string,,Per-variable mapping to entries in references.csv.,,not allowed
+provenance_long.csv,provenance_id,string,,Stable provenance-row identifier.,,field-dependent; explicit status retained
+provenance_long.csv,record_id,string,,Foreign key to a dataset record.,,field-dependent; explicit status retained
+provenance_long.csv,partition,string,,Locked data role.,,field-dependent; explicit status retained
+provenance_long.csv,molecule_name,string,,Curated compound name.,,field-dependent; explicit status retained
+provenance_long.csv,inchikey,string,,Identity anchor.,,field-dependent; explicit status retained
+provenance_long.csv,property_code,string,,Y01-Y07 target code.,,field-dependent; explicit status retained
+provenance_long.csv,property_name,string,,Human-readable target name.,,field-dependent; explicit status retained
+provenance_long.csv,final_value,number,property-specific; see unit column,Numerical value used for modeling.,,field-dependent; explicit status retained
+provenance_long.csv,unit,string,,Unit of final_value.,,field-dependent; explicit status retained
+provenance_long.csv,value_origin_class,string,,"Conservative origin class: experimental, evaluated/compiled, source-reported, formula/correlation estimate, or constructed.",,field-dependent; explicit status retained
+provenance_long.csv,high_confidence_source_subset,boolean,,Conservative eligibility flag used for source-sensitivity analysis; not a claim of condition-matched experiment.,,field-dependent; explicit status retained
+provenance_long.csv,reference_ids,string,,All references assigned to the value.,,field-dependent; explicit status retained
+provenance_long.csv,primary_reference_id,string,,Primary reference used for source metadata.,,field-dependent; explicit status retained
+provenance_long.csv,source_category,string,,Source-register category.,,field-dependent; explicit status retained
+provenance_long.csv,publisher_or_host,string,,"Publisher, database, or website host.",,field-dependent; explicit status retained
+provenance_long.csv,doi,string,,DOI where available.,,field-dependent; explicit status retained
+provenance_long.csv,url,string,,Source-specific URL.,,field-dependent; explicit status retained
+provenance_long.csv,citation_or_web_title,string,,Full citation or web-record title.,,field-dependent; explicit status retained
+provenance_long.csv,value_basis,string,,"How the selected value was measured, evaluated, estimated, or calculated.",,field-dependent; explicit status retained
+provenance_long.csv,measurement_conditions_or_method_note,string,,Retained condition/method detail or explicit statement that it was not retained.,,field-dependent; explicit status retained
+provenance_long.csv,conditions_status,string,,"reported, partly reported, not reported, or not applicable.",,field-dependent; explicit status retained
+provenance_long.csv,quality_grade,string,,Legacy audited grade where identity/property/reference matched; otherwise not reassessed or D for estimates.,,field-dependent; explicit status retained
+provenance_long.csv,verification_note,string,,Retained verification note where available.,,field-dependent; explicit status retained
+provenance_long.csv,provenance_reconstruction_basis,string,,Whether details came from an audited prior table or only the release reference registry.,,field-dependent; explicit status retained
+references.csv,reference_id,string,,Stable reference identifier.,,allowed where not available
+references.csv,citation_or_web_title,string,,Citation or source-specific webpage title.,,allowed where not available
+references.csv,doi,string,,Digital Object Identifier where available.,,allowed where not available
+references.csv,url,string,,Source URL.,,allowed where not available
+references.csv,source_category,string,,Curated source class.,,allowed where not available
+references.csv,publisher_or_host,string,,"Publisher, database, or website host.",,allowed where not available
+references.csv,access_or_license_note,string,,"Access, attribution, or curation note; not a substitute for the source terms.",,allowed where not available

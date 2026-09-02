@@ -107,14 +107,14 @@
   "recorded_interval_method": "90% and 95% empirical prediction intervals from formula-group maxima of nested-CV OOF absolute residuals; these are not Bayesian posterior intervals or coverage guarantees for an individual molecule.",
   "recorded_descriptor_distance_method": "mean L1 distance after median and 5th–95th percentile scaling",
   "limitations": [
-    "In the authors' curation schema, labels are categorized as source-supported, formula-derived, or constructed. The record-level provenance table is not included in this software-only repository, so these categories cannot be independently traced here to condition-matched measurements.",
+    "The release is a provenance-aware hybrid dataset. data/provenance_long.csv distinguishes experimental, evaluated or compiled, source-reported, calculated, formula or correlation-estimated, unresolved database, and constructed values; these classes do not imply harmonized experimental conditions.",
     "The model is intended for neutral, single-component hydrocarbon molecules with descriptors computed using the documented definitions.",
     "Solid–liquid phase-transition temperature is not the freezing point of a finished fuel blend.",
     "Kinematic viscosity is defined at 40 °C and is not a low-temperature aviation-fuel viscosity specification.",
     "Boiling point is a pure-component property, not a finished-fuel distillation curve.",
     "Predictions do not establish conformity with ASTM specifications, finished-fuel suitability, sustainability, synthetic feasibility, safety, cost, emissions or engine performance.",
-    "According to the curation metadata, density and flash-point labels retain heterogeneous source conditions rather than one standardized certification method. The full condition table is outside this software-only release.",
-    "The ten-record Sheet2 set is an internal held-out test set, not independent external or prospective validation.",
+    "Density and flash-point labels retain heterogeneous source conditions rather than one standardized certification method. Retained conditions and explicit missing-condition notes are provided in data/provenance_long.csv.",
+    "The ten-record data/held_out_test.csv set is an internal held-out test set, not independent external or prospective validation.",
     "Nine of the ten held-out records, representing eight of nine unique formulae, share a molecular formula with the development set.",
     "Y04 performed poorly on the internal holdout (R² = −0.021; MAE = 25.2 °C; n = 10). Do not use Y04 alone to rank or select compounds; experimental confirmation is required."
   ],

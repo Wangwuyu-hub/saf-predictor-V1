@@ -1,6 +1,6 @@
 SAF-Predict 1.0.0
-Development set: Sheet1 (n = 300)
-Internal holdout set: Sheet2 (n = 10)
+Development set: data/development.csv (n = 300; 73 molecular-formula groups)
+Internal held-out test: data/held_out_test.csv (n = 10; 9 formula groups)
 Model release: fixed serialized artifacts
-Browser/operating-system compatibility matrix: not included
+Reproducibility archive: data, provenance, sources, grouped folds, training scripts, pinned environment, and evaluation checks included
 Research-stage physicochemical prescreening only.

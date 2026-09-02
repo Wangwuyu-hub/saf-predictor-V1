@@ -1,0 +1,30 @@
+{
+  "pass": true,
+  "development_records": 300,
+  "held_out_records": 10,
+  "unique_record_ids": 310,
+  "unique_inchikeys": 310,
+  "formula_groups_development": 73,
+  "formula_groups_held_out": 9,
+  "provenance_rows": 2170,
+  "reference_rows": 491,
+  "missing_cas": 58,
+  "missing_pubchem_cid": 27,
+  "value_origin_counts": {
+    "calculated from literature thermochemistry": 96,
+    "constructed from Y01 and Y03": 310,
+    "experimental measurement": 95,
+    "evaluated or compiled literature value": 236,
+    "formula or correlation estimate": 1045,
+    "source database value; measurement status not resolved": 312,
+    "source-reported experimental value": 76
+  },
+  "conditions_status_counts": {
+    "reported": 1092,
+    "not applicable": 925,
+    "partly reported": 93,
+    "not reported": 60
+  },
+  "all_numeric_complete": true,
+  "all_pure_hydrocarbon": true
+}

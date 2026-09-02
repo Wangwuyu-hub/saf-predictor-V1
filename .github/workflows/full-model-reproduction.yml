@@ -1,0 +1,50 @@
+name: Full model reproduction
+
+on:
+  workflow_dispatch:
+
+jobs:
+  full-model-development:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install the pinned Python environment
+        run: python -m pip install -r requirements-lock.txt
+      - name: Run complete nested CV and deployment export
+        run: >-
+          python training/saf_reproduce.py all
+          --input data/development.csv
+          --config training/config.json
+          --output-dir run_outputs/full
+          --version 1.0.0
+          --n-jobs 1
+      - name: Compare regenerated nested-CV artifacts with the archive
+        run: >-
+          python scripts/compare_cv_artifacts.py
+          --generated-dir run_outputs/full/cv
+          --archive-dir artifacts/cv
+          --output run_outputs/full/full_nested_cv_reproduction_check.json
+      - name: Evaluate the regenerated Python model
+        run: >-
+          python scripts/evaluate_heldout.py
+          --data data/held_out_test.csv
+          --model run_outputs/full/release/models/SAF_Predict_public_model_bundle_v1.joblib
+          --reference-dir validation
+          --output-dir run_outputs/full/regenerated_heldout
+      - name: Check the regenerated browser model
+        env:
+          SAF_MODEL_BUNDLE_PATH: run_outputs/full/release/model_bundle.js
+        run: node tests/test_js_against_python_reference_cases.js
+      - uses: actions/upload-artifact@v4
+        with:
+          name: saf-predict-full-reproduction
+          path: run_outputs/full
+          if-no-files-found: error

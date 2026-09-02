@@ -1,0 +1,52 @@
+{
+  "status": "pass",
+  "scope": "Fresh installation, final-model retraining, export, and prediction-equivalence check from the public development data and configuration",
+  "environment": {
+    "python": "3.12.13",
+    "numpy": "2.5.2",
+    "pandas": "3.0.5",
+    "scipy": "1.18.1",
+    "scikit_learn": "1.9.0",
+    "joblib": "1.5.3",
+    "xgboost": "3.4.1",
+    "rdkit": "2025.9.2",
+    "requirements_lock_install_passed": true
+  },
+  "training": {
+    "records": 300,
+    "molecular_formula_groups": 73,
+    "selection": "Five-fold GroupKFold by molecular formula with RMSE minimization",
+    "deployment_seeds": {
+      "Y01": 20269831,
+      "Y03": 20269832,
+      "Y04": 20269833,
+      "Y05": 20269834,
+      "Y06": 20269835,
+      "Y07": 20269836
+    },
+    "all_models_trained_and_exported": true
+  },
+  "python_artifact": {
+    "released_joblib_sha256": "d4ecab30c318d1923f27b7f0acb1fb117510edb5a603857903d6568c736477a7",
+    "regenerated_joblib_sha256": "a9f6579f30dcca85d00fcd852f0771c725c84bbedb3ccbe23e1541ebaa638ce6",
+    "byte_identical": false,
+    "held_out_prediction_maximum_absolute_difference": 1.4210854715202004e-14,
+    "held_out_metric_maximum_absolute_difference": 1.7763568394002505e-15,
+    "prediction_tolerance": 1e-9,
+    "prediction_equivalence_passed": true,
+    "note": "Serialized files include generated metadata and are not expected to be byte-identical; prediction equivalence is the reproducibility criterion."
+  },
+  "browser_artifact": {
+    "released_bundle_sha256": "d8cca36e6ea10bccb25d725d791317fb7958c4999610e1eea3cbd76c85c741f2",
+    "regenerated_bundle_sha256": "d31ff00f3dce2310577792184b5ce10430adf2e7e4b0a4ed04959d1c1beabf98",
+    "six_reference_cases": 6,
+    "targets_per_case": 7,
+    "maximum_absolute_difference_from_python_reference": 0.00005162659489599264,
+    "tolerance": {
+      "Y04": 0.0002,
+      "all_other_targets": 1e-8
+    },
+    "prediction_equivalence_passed": true
+  },
+  "claim_boundary": "This check establishes deterministic numerical recovery under the pinned environment; it is not independent external validation of model generalization."
+}

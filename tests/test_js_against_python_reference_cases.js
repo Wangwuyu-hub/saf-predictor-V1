@@ -1,6 +1,9 @@
 const path = require("path");
 
-const bundle = require(path.join(__dirname, "..", "model_bundle.js"));
+const bundlePath = process.env.SAF_MODEL_BUNDLE_PATH
+  ? path.resolve(process.env.SAF_MODEL_BUNDLE_PATH)
+  : path.join(__dirname, "..", "model_bundle.js");
+const bundle = require(bundlePath);
 const core = require(path.join(__dirname, "..", "predictor_core.js"));
 const reference = require(path.join(__dirname, "python_reference_predictions_6cases.json"));
 

@@ -1,0 +1,273 @@
+{
+  "status": "pass",
+  "scope": "stable-key nested-CV reproduction comparison; not a byte-for-byte file comparison",
+  "generated_directory_label": "v1.0.0-full-rerun",
+  "archived_directory_label": "artifacts/cv",
+  "numeric_tolerance": 1e-12,
+  "ignored_run_variant_fields": [
+    "outer_fold_scores.csv.fit_seconds",
+    "protocol.json timestamps, hashes, paths, and run metadata",
+    "qa.json hashes and run-instance details"
+  ],
+  "table_comparisons": [
+    {
+      "artifact": "fold_manifest.csv",
+      "keys": [
+        "record_id"
+      ],
+      "categorical_fields": [
+        "molecule",
+        "molecular_formula",
+        "outer_fold"
+      ],
+      "numeric_fields": [],
+      "ignored_fields": [],
+      "generated_artifact": "generated-dir/fold_manifest.csv",
+      "archived_artifact": "archive-dir/fold_manifest.csv",
+      "pass": true,
+      "generated_rows": 300,
+      "archived_rows": 300,
+      "duplicate_generated_keys": [],
+      "duplicate_archived_keys": [],
+      "missing_from_generated_count": 0,
+      "missing_from_generated_sample": [],
+      "unexpected_in_generated_count": 0,
+      "unexpected_in_generated_sample": [],
+      "categorical_mismatch_count": 0,
+      "categorical_mismatch_sample": [],
+      "nonnumeric_value_count": 0,
+      "nonnumeric_value_sample": [],
+      "numeric_mismatch_count": 0,
+      "numeric_mismatch_sample": [],
+      "maximum_absolute_numeric_difference": 0.0
+    },
+    {
+      "artifact": "outer_fold_scores.csv",
+      "keys": [
+        "model",
+        "target",
+        "outer_fold"
+      ],
+      "categorical_fields": [
+        "property",
+        "unit",
+        "n_train",
+        "n_test",
+        "train_formula_groups",
+        "test_formula_groups",
+        "formula_overlap",
+        "best_params",
+        "random_seed",
+        "warning_count"
+      ],
+      "numeric_fields": [
+        "r2",
+        "rmse",
+        "mae",
+        "best_inner_rmse"
+      ],
+      "ignored_fields": [
+        "fit_seconds"
+      ],
+      "generated_artifact": "generated-dir/outer_fold_scores.csv",
+      "archived_artifact": "archive-dir/outer_fold_scores.csv",
+      "pass": true,
+      "generated_rows": 140,
+      "archived_rows": 140,
+      "duplicate_generated_keys": [],
+      "duplicate_archived_keys": [],
+      "missing_from_generated_count": 0,
+      "missing_from_generated_sample": [],
+      "unexpected_in_generated_count": 0,
+      "unexpected_in_generated_sample": [],
+      "categorical_mismatch_count": 0,
+      "categorical_mismatch_sample": [],
+      "nonnumeric_value_count": 0,
+      "nonnumeric_value_sample": [],
+      "numeric_mismatch_count": 0,
+      "numeric_mismatch_sample": [],
+      "maximum_absolute_numeric_difference": 0.0
+    },
+    {
+      "artifact": "oof_predictions.csv",
+      "keys": [
+        "record_id",
+        "model",
+        "target"
+      ],
+      "categorical_fields": [
+        "molecule",
+        "molecular_formula",
+        "outer_fold",
+        "property",
+        "unit",
+        "provenance_class"
+      ],
+      "numeric_fields": [
+        "y_true",
+        "y_pred",
+        "residual"
+      ],
+      "ignored_fields": [],
+      "generated_artifact": "generated-dir/oof_predictions.csv",
+      "archived_artifact": "archive-dir/oof_predictions.csv",
+      "pass": true,
+      "generated_rows": 8400,
+      "archived_rows": 8400,
+      "duplicate_generated_keys": [],
+      "duplicate_archived_keys": [],
+      "missing_from_generated_count": 0,
+      "missing_from_generated_sample": [],
+      "unexpected_in_generated_count": 0,
+      "unexpected_in_generated_sample": [],
+      "categorical_mismatch_count": 0,
+      "categorical_mismatch_sample": [],
+      "nonnumeric_value_count": 0,
+      "nonnumeric_value_sample": [],
+      "numeric_mismatch_count": 0,
+      "numeric_mismatch_sample": [],
+      "maximum_absolute_numeric_difference": 0.0
+    },
+    {
+      "artifact": "model_target_summary.csv",
+      "keys": [
+        "model",
+        "target"
+      ],
+      "categorical_fields": [
+        "property",
+        "unit",
+        "rank_by_mean_fold_r2"
+      ],
+      "numeric_fields": [
+        "mean_fold_r2",
+        "sd_fold_r2",
+        "median_fold_r2",
+        "min_fold_r2",
+        "max_fold_r2",
+        "oof_r2",
+        "oof_rmse",
+        "oof_mae"
+      ],
+      "ignored_fields": [],
+      "generated_artifact": "generated-dir/model_target_summary.csv",
+      "archived_artifact": "archive-dir/model_target_summary.csv",
+      "pass": true,
+      "generated_rows": 28,
+      "archived_rows": 28,
+      "duplicate_generated_keys": [],
+      "duplicate_archived_keys": [],
+      "missing_from_generated_count": 0,
+      "missing_from_generated_sample": [],
+      "unexpected_in_generated_count": 0,
+      "unexpected_in_generated_sample": [],
+      "categorical_mismatch_count": 0,
+      "categorical_mismatch_sample": [],
+      "nonnumeric_value_count": 0,
+      "nonnumeric_value_sample": [],
+      "numeric_mismatch_count": 0,
+      "numeric_mismatch_sample": [],
+      "maximum_absolute_numeric_difference": 0.0
+    },
+    {
+      "artifact": "provenance_stratified_metrics.csv",
+      "keys": [
+        "model",
+        "target",
+        "provenance_class"
+      ],
+      "categorical_fields": [
+        "property",
+        "n"
+      ],
+      "numeric_fields": [
+        "r2",
+        "rmse",
+        "mae"
+      ],
+      "ignored_fields": [],
+      "generated_artifact": "generated-dir/provenance_stratified_metrics.csv",
+      "archived_artifact": "archive-dir/provenance_stratified_metrics.csv",
+      "pass": true,
+      "generated_rows": 52,
+      "archived_rows": 52,
+      "duplicate_generated_keys": [],
+      "duplicate_archived_keys": [],
+      "missing_from_generated_count": 0,
+      "missing_from_generated_sample": [],
+      "unexpected_in_generated_count": 0,
+      "unexpected_in_generated_sample": [],
+      "categorical_mismatch_count": 0,
+      "categorical_mismatch_sample": [],
+      "nonnumeric_value_count": 0,
+      "nonnumeric_value_sample": [],
+      "numeric_mismatch_count": 0,
+      "numeric_mismatch_sample": [],
+      "maximum_absolute_numeric_difference": 0.0
+    },
+    {
+      "artifact": "y02_direct_vs_derived_sensitivity.csv",
+      "keys": [
+        "model",
+        "approach"
+      ],
+      "categorical_fields": [
+        "n"
+      ],
+      "numeric_fields": [
+        "oof_r2",
+        "oof_rmse",
+        "oof_mae"
+      ],
+      "ignored_fields": [],
+      "generated_artifact": "generated-dir/y02_direct_vs_derived_sensitivity.csv",
+      "archived_artifact": "archive-dir/y02_direct_vs_derived_sensitivity.csv",
+      "pass": true,
+      "generated_rows": 8,
+      "archived_rows": 8,
+      "duplicate_generated_keys": [],
+      "duplicate_archived_keys": [],
+      "missing_from_generated_count": 0,
+      "missing_from_generated_sample": [],
+      "unexpected_in_generated_count": 0,
+      "unexpected_in_generated_sample": [],
+      "categorical_mismatch_count": 0,
+      "categorical_mismatch_sample": [],
+      "nonnumeric_value_count": 0,
+      "nonnumeric_value_sample": [],
+      "numeric_mismatch_count": 0,
+      "numeric_mismatch_sample": [],
+      "maximum_absolute_numeric_difference": 0.0
+    }
+  ],
+  "json_comparisons": [
+    {
+      "artifact": "protocol.json",
+      "comparison": "normalized stable analysis contract; timestamps, hashes, paths, and run metadata ignored",
+      "pass": true,
+      "compared_fields": [
+        "records",
+        "inputs",
+        "targets",
+        "models",
+        "outer_folds",
+        "inner_folds",
+        "base_seed",
+        "parameter_grid.XGBoost",
+        "parameter_grid.RF",
+        "parameter_grid.SVR",
+        "parameter_grid.ANN"
+      ],
+      "mismatch_count": 0,
+      "mismatch_sample": []
+    },
+    {
+      "artifact": "qa.json",
+      "comparison": "stable completion status only; file hashes and timing-dependent details ignored",
+      "pass": true,
+      "generated_all_checks_passed": true,
+      "archived_pass": true
+    }
+  ],
+  "all_comparisons_passed": true
+}

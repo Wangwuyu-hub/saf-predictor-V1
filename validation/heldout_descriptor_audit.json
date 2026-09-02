@@ -1,0 +1,36 @@
+{
+  "status": "pass",
+  "input": "data\\held_out_test.csv",
+  "output": "run_outputs\\heldout_with_recomputed_descriptors.csv",
+  "records": 10,
+  "rdkit_version": "2025.09.2",
+  "verify_existing": true,
+  "tolerance": 1e-09,
+  "maximum_absolute_difference": {
+    "X01": 5.684341886080802e-14,
+    "X02": 4.440892098500626e-15,
+    "X03": 3.3306690738754696e-16,
+    "X04": 0.0,
+    "X05": 0.0,
+    "X06": 3.3306690738754696e-15,
+    "X07": 3.9968028886505635e-15
+  },
+  "mismatch_count": {
+    "X01": 0,
+    "X02": 0,
+    "X03": 0,
+    "X04": 0,
+    "X05": 0,
+    "X06": 0,
+    "X07": 0
+  },
+  "definitions": {
+    "X01": "RDKit Descriptors.MolWt average molecular mass",
+    "X02": "total hydrogen atom count divided by carbon atom count",
+    "X03": "aromatic carbon atom count divided by carbon atom count",
+    "X04": "RDKit rdMolDescriptors.CalcNumRings",
+    "X05": "carbon atoms bonded directly to at least three carbon atoms",
+    "X06": "ln(1 + graph automorphism match count), ignoring stereochemistry",
+    "X07": "RDKit GraphDescriptors.Kappa2"
+  }
+}

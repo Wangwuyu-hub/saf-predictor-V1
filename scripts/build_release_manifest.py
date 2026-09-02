@@ -29,7 +29,7 @@ def sha256(path: Path) -> str:
 
 def public_files() -> list[Path]:
     excluded_names = {MANIFEST.name, CHECKSUMS.name}
-    excluded_parts = {".git", "__pycache__", ".venv", "node_modules"}
+    excluded_parts = {".git", "__pycache__", ".venv", "venv", "node_modules", "run_outputs"}
     return [
         path
         for path in sorted(ROOT.rglob("*"))
@@ -62,10 +62,33 @@ def main() -> None:
         "validation/held_out_test_summary.json",
         "validation/held_out_evaluation_checks.json",
         "validation/held_out_test_report.html",
+        "validation/full_nested_cv_reproduction_check.json",
+        "validation/training_export_reproduction_check.json",
         "RELEASE_CHECKS.json",
     ]
+    data_and_reproducibility_paths = [
+        "data/development.csv",
+        "data/held_out_test.csv",
+        "data/provenance_long.csv",
+        "data/references.csv",
+        "data/data_dictionary.csv",
+        "data/cv_fold_manifest.csv",
+        "data/SAF_Hydrocarbon_Dataset_v1.0.0.xlsx",
+        "training/saf_reproduce.py",
+        "training/config.json",
+        "scripts/compute_descriptors.py",
+        "scripts/evaluate_heldout.py",
+        "scripts/compare_cv_artifacts.py",
+        "requirements-lock.txt",
+        "LICENSE",
+        "DATA_LICENSE.md",
+        "CITATION.cff",
+        ".zenodo.json",
+    ]
     missing_expected = [
-        name for name in browser_program + model_and_evaluation_paths if name not in hashes
+        name
+        for name in browser_program + model_and_evaluation_paths + data_and_reproducibility_paths
+        if name not in hashes
     ]
     if missing_expected:
         raise FileNotFoundError(f"Expected public release files are missing: {missing_expected}")
@@ -80,6 +103,9 @@ def main() -> None:
         "browser_prediction_program": {name: hashes[name] for name in browser_program},
         "model_and_evaluation_artifacts": {
             name: hashes[name] for name in model_and_evaluation_paths
+        },
+        "data_and_reproducibility_artifacts": {
+            name: hashes[name] for name in data_and_reproducibility_paths
         },
         "recorded_private_source_artifact_identifiers": artifact_metadata[
             "source_artifact_identifiers"

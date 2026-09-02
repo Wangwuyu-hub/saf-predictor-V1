@@ -1,0 +1,52 @@
+{
+  "pass": true,
+  "checks": {
+    "sheet1_records_300": true,
+    "record_ids_unique": true,
+    "inputs_exact": true,
+    "targets_exact": true,
+    "all_values_complete_finite": true,
+    "fold_manifest_300": true,
+    "five_folds_each_60": true,
+    "no_formula_crosses_outer_folds": true,
+    "fold_scores_140": true,
+    "five_scores_per_model_target": true,
+    "all_fold_scores_finite": true,
+    "fold_formula_overlap_zero": true,
+    "oof_predictions_8400": true,
+    "oof_300_per_model_target": true,
+    "oof_ids_complete_every_block": true,
+    "oof_fold_matches_manifest": true,
+    "fold_r2_recalculates": true,
+    "summary_28": true,
+    "summary_finite": true,
+    "sheet2_excluded_protocol": true,
+    "grouped_nested_cv_protocol": true,
+    "within_fold_scaling_protocol": true
+  },
+  "fold_sizes": {
+    "1": 60,
+    "2": 60,
+    "3": 60,
+    "4": 60,
+    "5": 60
+  },
+  "unique_formulae": 73,
+  "fold_score_rows": 140,
+  "oof_rows": 8400,
+  "summary_rows": 28,
+  "model_versions": {
+    "python": "3.12.13",
+    "numpy": "2.5.2",
+    "pandas": "3.0.5",
+    "scipy": "1.18.1",
+    "scikit_learn": "1.9.0",
+    "xgboost": "3.4.1"
+  },
+  "files": {
+    "fold_manifest_sha256": "2a4afdfe8fa4f973ae2c51776883121935493eff0a268171b0970cad37d194c9",
+    "fold_scores_sha256": "6b6f7cd293ff5c409d33dee397ccac326ce540677635bc0ff827c0080d38f202",
+    "oof_sha256": "16e705a986b9adc140792fad8bd9571238677b77cc5b506e50808f676491174f",
+    "summary_sha256": "d7a375b16677033a48f99508d4a7e2e28e80720e3b0bee282728077daff53ce5"
+  }
+}
