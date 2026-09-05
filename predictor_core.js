@@ -78,7 +78,7 @@
   }
 
   function createPredictor(bundle) {
-    if (!bundle || bundle.schema_version !== 1) throw new Error("Unsupported SAF-Predict model bundle");
+    if (!bundle || bundle.schema_version !== 2) throw new Error("Unsupported SAF-Predict model bundle");
     const inputOrder = bundle.input_order.slice();
     const targetOrder = bundle.target_order.slice();
     const med = bundle.ood.feature_median;
@@ -158,7 +158,6 @@
       const x = checked.x;
       const predictions = {};
       for (const target of Object.keys(bundle.models)) predictions[target] = predictModel(bundle.models[target], x);
-      predictions.Y02 = predictions.Y01 * predictions.Y03;
 
       const outputs = {};
       for (const target of targetOrder) {

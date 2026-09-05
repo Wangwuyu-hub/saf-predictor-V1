@@ -1,0 +1,43 @@
+{
+  "record_type": "self-generated numerical regression check",
+  "scope": "Checks that the v1.1.0 Y02 semantic migration did not change predictions for Y01 and Y03-Y07 on the 300 development plus 10 held-out descriptor vectors.",
+  "old_model_sha256": "d4ecab30c318d1923f27b7f0acb1fb117510edb5a603857903d6568c736477a7",
+  "new_model_sha256": "3b28cc27600af8f6393d7e1df8359d93a9d5b293b7ad4ef8e5e0036107741158",
+  "rows_checked": 310,
+  "tolerance": 1e-09,
+  "maximum_absolute_prediction_difference": {
+    "Y01": 0.0,
+    "Y03": 4.9960036108132044e-15,
+    "Y04": 0.0,
+    "Y05": 2.7142732506035827e-11,
+    "Y06": 2.0754953311552526e-11,
+    "Y07": 6.217248937900877e-14
+  },
+  "unchanged_target_predictions_within_tolerance": {
+    "Y01": true,
+    "Y03": true,
+    "Y04": true,
+    "Y05": true,
+    "Y06": true,
+    "Y07": true
+  },
+  "unchanged_target_intervals_exact": {
+    "Y01": true,
+    "Y03": true,
+    "Y04": true,
+    "Y05": true,
+    "Y06": true,
+    "Y07": true
+  },
+  "unchanged_target_deployment_mapping_exact": {
+    "Y01": true,
+    "Y03": true,
+    "Y04": true,
+    "Y05": true,
+    "Y06": true,
+    "Y07": true
+  },
+  "v1_1_Y02_separately_modelled_canary": true,
+  "maximum_abs_v1_1_Y02_minus_Y01_times_Y03": 6.865774749435616,
+  "all_checks_passed": true
+}

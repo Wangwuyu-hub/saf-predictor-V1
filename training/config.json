@@ -13,6 +13,7 @@
   ],
   "deployment_models": {
     "Y01": "RF",
+    "Y02": "RF",
     "Y03": "SVR",
     "Y04": "XGBoost",
     "Y05": "SVR",
@@ -25,11 +26,12 @@
     "Y04",
     "Y05",
     "Y06",
-    "Y07"
+    "Y07",
+    "Y02"
   ],
   "seed_policy": {
     "nested_cv": "base_seed + 100 * target_index + 10 * model_index + outer_fold_number; target_index/model_index are zero-based in model_order and outer_fold_number is 1..5",
-    "final_fit": "base_seed + 9000 + deployment_index; deployment_index is zero-based in final_fit_target_order"
+    "final_fit": "base_seed + 9000 + deployment_index; deployment_index is zero-based in final_fit_target_order. Y02 is appended so v1.0.0 seeds for Y01 and Y03-Y07 remain unchanged."
   },
   "provenance_reconstruction": {
     "reference_map_column": "reference_map",

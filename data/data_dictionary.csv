@@ -1,4 +1,4 @@
-﻿table,column,data_type,unit,description,allowed_values_or_rule,missing_value_policy
+table,column,data_type,unit,description,allowed_values_or_rule,missing_value_policy
 development.csv,record_id,string,,Stable curation record identifier.,,not allowed
 development.csv,molecule_name,string,,Curated compound name; identity is anchored by structure fields.,,not allowed
 development.csv,cas_rn,string,,CAS Registry Number where unambiguously resolved.,,allowed; see cas_status
@@ -24,7 +24,7 @@ development.csv,X05,number,count,Carbon atoms directly bonded to at least three 
 development.csv,X06,number,1,"ln(1 + graph automorphism match count), ignoring stereochemistry.",,not allowed
 development.csv,X07,number,1,RDKit Kier second-order shape index (Kappa2).,,not allowed
 development.csv,Y01,number,MJ kg^-1,Mass-based net heat of combustion.,,not allowed
-development.csv,Y02,number,MJ L^-1,Volumetric net heat of combustion.,,not allowed
+development.csv,Y02,number,MJ L^-1,Independently collected volumetric net heat of combustion response; not constructed from the current Y01 and Y03 columns.,,allowed when no identity-resolved independent response is retained
 development.csv,Y03,number,g cm^-3,Density.,,not allowed
 development.csv,Y04,number,degC,Solid-liquid phase-transition temperature.,,not allowed
 development.csv,Y05,number,degC,Boiling point.,,not allowed
@@ -32,6 +32,7 @@ development.csv,Y06,number,degC,Flash point.,,not allowed
 development.csv,Y07,number,mm^2 s^-1,Kinematic viscosity at 40 degC.,,not allowed
 development.csv,reference_map,string,,Per-variable mapping to entries in references.csv.,,not allowed
 held_out_test.csv,record_id,string,,Stable curation record identifier.,,not allowed
+development.csv,Y02_label_status,categorical,,Availability and provenance boundary for the Y02 response.,author-curated independent response; source audit pending | not available,not allowed
 held_out_test.csv,molecule_name,string,,Curated compound name; identity is anchored by structure fields.,,not allowed
 held_out_test.csv,cas_rn,string,,CAS Registry Number where unambiguously resolved.,,allowed; see cas_status
 held_out_test.csv,cas_status,categorical,,Reason/status for CAS availability.,reported | not available or not unambiguously resolved,not allowed
@@ -56,12 +57,13 @@ held_out_test.csv,X05,number,count,Carbon atoms directly bonded to at least thre
 held_out_test.csv,X06,number,1,"ln(1 + graph automorphism match count), ignoring stereochemistry.",,not allowed
 held_out_test.csv,X07,number,1,RDKit Kier second-order shape index (Kappa2).,,not allowed
 held_out_test.csv,Y01,number,MJ kg^-1,Mass-based net heat of combustion.,,not allowed
-held_out_test.csv,Y02,number,MJ L^-1,Volumetric net heat of combustion.,,not allowed
+held_out_test.csv,Y02,number,MJ L^-1,Independently collected volumetric net heat of combustion response; not constructed from the current Y01 and Y03 columns.,,allowed when no identity-resolved independent response is retained
 held_out_test.csv,Y03,number,g cm^-3,Density.,,not allowed
 held_out_test.csv,Y04,number,degC,Solid-liquid phase-transition temperature.,,not allowed
 held_out_test.csv,Y05,number,degC,Boiling point.,,not allowed
 held_out_test.csv,Y06,number,degC,Flash point.,,not allowed
 held_out_test.csv,Y07,number,mm^2 s^-1,Kinematic viscosity at 40 degC.,,not allowed
+held_out_test.csv,Y02_label_status,categorical,,Availability and provenance boundary for the Y02 response.,author-curated independent response; source audit pending | not available,not allowed
 held_out_test.csv,reference_map,string,,Per-variable mapping to entries in references.csv.,,not allowed
 provenance_long.csv,provenance_id,string,,Stable provenance-row identifier.,,field-dependent; explicit status retained
 provenance_long.csv,record_id,string,,Foreign key to a dataset record.,,field-dependent; explicit status retained
@@ -94,3 +96,10 @@ references.csv,url,string,,Source URL.,,allowed where not available
 references.csv,source_category,string,,Curated source class.,,allowed where not available
 references.csv,publisher_or_host,string,,"Publisher, database, or website host.",,allowed where not available
 references.csv,access_or_license_note,string,,"Access, attribution, or curation note; not a substitute for the source terms.",,allowed where not available
+y02_physical_baseline_audit.csv,record_id,string,,Stable curation record identifier.,,not allowed
+y02_physical_baseline_audit.csv,partition,categorical,,Locked data role.,development | internal_heldout_test,not allowed
+y02_physical_baseline_audit.csv,Y01,number,MJ kg^-1,Released mass-based net heat of combustion.,,not allowed
+y02_physical_baseline_audit.csv,Y03,number,g cm^-3,Released density.,,not allowed
+y02_physical_baseline_audit.csv,Y02_physical_baseline,number,MJ L^-1,Y01 x Y03 comparator; not a Y02 training label.,Y01 x Y03,not allowed
+y02_physical_baseline_audit.csv,Y02_independent_response,number,MJ L^-1,Identity-resolved independently collected Y02 response when available.,,allowed
+y02_physical_baseline_audit.csv,independent_minus_baseline,number,MJ L^-1,Independent Y02 minus Y01 x Y03 on matched records.,,allowed when Y02 is unavailable

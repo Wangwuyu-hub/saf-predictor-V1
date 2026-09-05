@@ -1,4 +1,4 @@
-# SAF-Predict v1.0.0
+# SAF-Predict v1.1.0
 
 SAF-Predict is a versioned, offline research tool for estimating seven
 physicochemical properties of neutral, single-component hydrocarbon molecules
@@ -13,7 +13,7 @@ synthetic feasibility, safety, emissions, cost, or engine compatibility.
 
 ## Use the predictor without installing software
 
-1. Download the `SAF-Predict-v1.0.0-offline.zip` asset from the GitHub release,
+1. Download the `SAF-Predict-v1.1.0-offline.zip` asset from the GitHub release,
    or download this repository as a ZIP.
 2. Extract the archive.
 3. Open `index.html` in a current desktop browser. On Windows,
@@ -39,7 +39,7 @@ upload molecular inputs.
 | Code | Predicted property | Deployed method |
 |---|---|---|
 | Y01 | Mass-based net heat of combustion | Random forest |
-| Y02 | Volumetric net heat of combustion | Predicted Y01 x predicted Y03 |
+| Y02 | Volumetric net heat of combustion | Random forest fitted to the independently collected Y02 response |
 | Y03 | Density | Support vector regression |
 | Y04 | Solid-liquid phase-transition temperature | XGBoost |
 | Y05 | Boiling point | Support vector regression |
@@ -64,13 +64,27 @@ database.
 - `data/provenance_long.csv`: one row for every record-property pair (2,170
   rows), with value origin, source link, retained conditions or method notes,
   and a conservative quality field.
-- `data/references.csv`: 491 source records with DOI or URL where available.
+- `data/references.csv`: 492 source records with DOI or URL where available.
 - `data/data_dictionary.csv`: field definitions, units, allowed values, and
   missing-value policies.
 - `data/cv_fold_manifest.csv`: the fixed outer GroupKFold assignment for all
   300 development records.
-- `data/SAF_Hydrocarbon_Dataset_v1.0.0.xlsx`: formatted workbook containing the
-  same release tables.
+- `data/y02_direct_response_reconciliation.csv`: identity linkage for the 162
+  development and 8 held-out Y02 labels retained in v1.1.0.
+- `data/y02_full_reconciliation_audit.csv`: all 243 legacy Y02 rows, including
+  unmatched and conflicting records.
+- `data/y02_physical_baseline_audit.csv`: the Y01 x Y03 comparator, kept outside
+  the modelling tables and used only for sensitivity analysis.
+- `data/SAF_Hydrocarbon_Dataset_v1.1.0.xlsx`: formatted workbook containing the
+  release and Y02 audit tables.
+
+Y02 is modelled as a separate response. It is available for 162 development
+records spanning 66 molecular-formula groups; the remaining 138 Y02 cells are
+left missing and excluded from Y02 training. Eight of the ten internal held-out
+records have a linked Y02 reference label. Identity linkage is documented, but
+direct experimental status, primary-source lineage, and measurement conditions
+remain unresolved for some legacy Y02 rows; these labels are therefore not
+described uniformly as experimental or high-confidence measurements.
 
 Every record is a pure, single-component C/H-only molecule. Mixture and
 oxygenate flags are explicit and false throughout this release. Aromaticity and
@@ -82,7 +96,7 @@ canonical SMILES are complete.
 ## Reproduce the checks
 
 Python 3.12 is recommended. `requirements-lock.txt` pins the direct and
-transitive packages used for the v1.0.0 checks; `environment.yml` provides the
+transitive packages used for the v1.1.0 checks; `environment.yml` provides the
 same environment specification for Conda users.
 
 ```bash
@@ -117,13 +131,12 @@ python training/saf_reproduce.py smoke --input data/development.csv \
   --config training/config.json --output-dir run_outputs/smoke
 ```
 
-Reproduce the archived predictions and metrics for the internal held-out set:
+Reproduce the frozen-model predictions and metrics for the internal held-out set:
 
 ```bash
 python scripts/evaluate_heldout.py \
   --data data/held_out_test.csv \
   --model models/SAF_Predict_public_model_bundle_v1.joblib \
-  --reference-dir validation \
   --output-dir run_outputs/heldout
 ```
 
@@ -171,17 +184,18 @@ python training/saf_reproduce.py train-export \
   --config training/config.json \
   --cv-dir run_outputs/cv \
   --output-dir run_outputs/release \
-  --version 1.0.0 \
+  --version 1.1.0 \
   --n-jobs 1
 ```
 
 `--n-jobs 1` is the conservative deterministic setting. The first command is
-computationally expensive. `artifacts/cv/` contains the archived v1.0.0 fold
-manifest, outer-fold scores, 8,400 out-of-fold predictions, model-target
-summary, source-stratified metrics, Y02 sensitivity analysis, protocol, and QA
-records. During a rerun, the training workflow reconstructs the archived
+computationally expensive. `artifacts/cv/` contains the archived v1.1.0 fold
+manifest, outer-fold scores, 7,848 out-of-fold predictions, model-target
+summary, source-stratified metrics, Y02 physical-baseline sensitivity analysis,
+protocol, and QA records. During a rerun, the training workflow reconstructs the
 `formula-derived`/`source-supported` Figure 4 strata from each record's
-`reference_map`; Y02 is `constructed`. These analysis strata are distinct from
+`reference_map`. Y02 is evaluated only on its 162 available independently collected labels
+and is not promoted to a high-confidence source stratum. These analysis strata are distinct from
 the detailed value-origin metadata in `data/provenance_long.csv`.
 
 With the lockfile versions and `--n-jobs 1`, compare a new full run with the
@@ -196,6 +210,10 @@ absolute tolerance of `1e-12`, and ignores only timing, timestamp, hash, and
 run-instance metadata fields:
 
 ```bash
+python scripts/build_model_consistency_table.py \
+  --oof run_outputs/cv/oof_predictions.csv \
+  --config training/config.json \
+  --output run_outputs/cv/xgboost_reference_vs_deployment_consistency.csv
 python scripts/compare_cv_artifacts.py \
   --generated-dir run_outputs/cv \
   --archive-dir artifacts/cv \
@@ -211,15 +229,26 @@ have the same checksum because they contain run-specific metadata.
 
 ## Internal held-out evaluation
 
-| Target | R² | RMSE | MAE |
-|---|---:|---:|---:|
-| Y01 | 0.902 | 0.577 MJ kg^-1 | 0.463 MJ kg^-1 |
-| Y02 | 0.773 | 1.219 MJ L^-1 | 0.967 MJ L^-1 |
-| Y03 | 0.873 | 0.0325 g cm^-3 | 0.0238 g cm^-3 |
-| Y04 | -0.021 | 36.371 °C | 25.231 °C |
-| Y05 | 0.979 | 8.236 °C | 6.437 °C |
-| Y06 | 0.920 | 10.697 °C | 7.657 °C |
-| Y07 | 0.820 | 0.295 mm² s^-1 | 0.196 mm² s^-1 |
+| Target | n | R² | RMSE | MAE | 90% interval coverage | 95% interval coverage |
+|---|---:|---:|---:|---:|---:|---:|
+| Y01 | 10 | 0.902 | 0.577 MJ kg^-1 | 0.463 MJ kg^-1 | 9/10 | 10/10 |
+| Y02 | 8 | 0.796 | 1.409 MJ L^-1 | 0.925 MJ L^-1 | 7/8 | 8/8 |
+| Y03 | 10 | 0.873 | 0.0325 g cm^-3 | 0.0238 g cm^-3 | 10/10 | 10/10 |
+| Y04 | 10 | -0.021 | 36.371 °C | 25.231 °C | 8/10 | 9/10 |
+| Y05 | 10 | 0.979 | 8.236 °C | 6.437 °C | 10/10 | 10/10 |
+| Y06 | 10 | 0.920 | 10.697 °C | 7.657 °C | 10/10 | 10/10 |
+| Y07 | 10 | 0.820 | 0.295 mm² s^-1 | 0.196 mm² s^-1 | 10/10 | 10/10 |
+
+These are point estimates from the frozen v1.1.0 models. Molecular-formula-
+group bootstrap confidence intervals for R², RMSE, and MAE, together with exact
+binomial confidence intervals for coverage, are in
+`validation/held_out_test_metrics.csv` and
+`validation/held_out_test_report.html`. Record-level predictions, residuals,
+source categories, and distance scores are in
+`validation/held_out_test_predictions_long.csv`. Y02 is evaluated only on the
+eight records with a retained Y02 label; its two missing labels are not imputed
+and do not contribute to errors or coverage estimates. The other targets are
+evaluated on all ten records.
 
 Nine of ten held-out records, representing eight of nine unique formulae, share
 a molecular formula with the development set. These results are therefore an
@@ -227,9 +256,9 @@ a molecular formula with the development set. These results are therefore an
 experimental validation. File hashes document the released artifact contents
 but do not independently prove the chronology of label access.
 
-Y04 performed poorly on the internal holdout (R² = -0.021; MAE = 25.2 °C;
-n = 10). Do not use Y04 alone to rank or select compounds; experimental
-confirmation is required.
+Y04 should not be used alone to rank or select compounds. Consult the current
+version-specific metrics and intervals in the validation report, and obtain
+experimental confirmation before making a selection.
 
 ## Repository map
 
@@ -239,7 +268,7 @@ training/      complete grouped nested-CV, final-fit, and model-export workflow
 models/        fixed Python and browser model artifacts plus model metadata
 validation/    archived test predictions, metrics, reports, and parity checks
 artifacts/cv/  archived nested-CV predictions, scores, protocol, and QA
-scripts/       descriptor audit, held-out evaluation, and release QA utilities
+scripts/       descriptor/evaluation audits, model-consistency checks, metadata, and release QA
 tests/         browser-versus-Python numerical parity tests
 ```
 
@@ -266,7 +295,7 @@ tests/         browser-versus-Python numerical parity tests
 - Citation metadata: `CITATION.cff`.
 - Zenodo deposit metadata: `.zenodo.json`.
 
-Use the immutable `v1.0.0` GitHub Release for software downloads and the
+Use the immutable `v1.1.0` GitHub Release for software downloads and the
 version-specific Zenodo DOI for scholarly citation. The DOI is assigned by
 Zenodo when the release is archived; the repository landing page and release
 notes will link to the resulting record.

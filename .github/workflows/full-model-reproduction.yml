@@ -24,8 +24,14 @@ jobs:
           --input data/development.csv
           --config training/config.json
           --output-dir run_outputs/full
-          --version 1.0.0
+          --version 1.1.0
           --n-jobs 1
+      - name: Build XGBoost-reference versus deployment consistency table
+        run: >-
+          python scripts/build_model_consistency_table.py
+          --oof run_outputs/full/cv/oof_predictions.csv
+          --config training/config.json
+          --output run_outputs/full/cv/xgboost_reference_vs_deployment_consistency.csv
       - name: Compare regenerated nested-CV artifacts with the archive
         run: >-
           python scripts/compare_cv_artifacts.py

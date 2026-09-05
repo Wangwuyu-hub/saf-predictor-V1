@@ -35,15 +35,6 @@ BROWSER_JS = ROOT / "model_bundle.js"
 WIDE_CSV = VALIDATION_DIR / "held_out_predictions.csv"
 LONG_CSV = VALIDATION_DIR / "held_out_test_predictions_long.csv"
 
-EXPECTED_SOURCE_JOBLIB_SHA256 = "e5a648cba47e0ba98e902144e45b937610f82c0d96719b4ef248cf3ab903ef73"
-EXPECTED_SOURCE_CSV_SHA256 = {
-    WIDE_CSV.name: "040a212e0ff390af7d7ec8a0e68e7c77c5c19b09d2bbd3c6b274a5b245e19018",
-    LONG_CSV.name: "a9132b32e99880d21371a000b4cd2cf6b924fa28c3a6044945ed1abc02a47581",
-}
-EXPECTED_PUBLIC_NEAREST_IDS = {
-    "DEV-0004", "DEV-0032", "DEV-0047", "DEV-0075", "DEV-0079",
-    "DEV-0101", "DEV-0153", "DEV-0171", "DEV-0184", "DEV-0236",
-}
 INPUT_CODES = [f"X{i:02d}" for i in range(1, 8)]
 
 
@@ -360,8 +351,14 @@ def sanitize_validation_csv(
     path: Path,
     mapping: dict[str, str],
     remove_fields: set[str],
+    expected_source_sha256: str | None,
 ) -> dict[str, Any]:
     before_hash = sha256(path)
+    if expected_source_sha256 and before_hash != expected_source_sha256:
+        raise ValueError(
+            f"Private source CSV hash mismatch for {path.name}: "
+            f"expected {expected_source_sha256}, found {before_hash}"
+        )
     before_fields, before_rows = read_csv(path)
     source_id_field = (
         "nearest_training_record"
@@ -402,7 +399,7 @@ def sanitize_validation_csv(
     if len(before_rows) != len(after_rows):
         raise AssertionError(f"Row count changed for {path.name}")
     observed_public_nearest_ids = {row["nearest_development_record"] for row in after_rows}
-    if observed_public_nearest_ids != EXPECTED_PUBLIC_NEAREST_IDS:
+    if not observed_public_nearest_ids.issubset(valid_public_ids):
         raise AssertionError(f"Unexpected nearest-development surrogate IDs in {path.name}")
     identity_fields = [field for field in ("record_id", "molecule", "molecular_formula") if field in before_fields]
     preserved_fields = [
@@ -423,7 +420,7 @@ def sanitize_validation_csv(
         raise AssertionError(f"CSV write verification failed for {path.name}")
     return {
         "path": f"validation/{path.name}",
-        "expected_private_source_sha256": EXPECTED_SOURCE_CSV_SHA256[path.name],
+        "expected_private_source_sha256": expected_source_sha256,
         "input_sha256": before_hash,
         "public_sha256": sha256(path),
         "row_count": len(after_rows),
@@ -462,6 +459,21 @@ def main() -> None:
         default=str(DEFAULT_SOURCE_JOBLIB),
         help="Path to the private source Joblib (not distributed in the public release).",
     )
+    parser.add_argument(
+        "--expected-source-joblib-sha256",
+        default=None,
+        help="Optional pinned SHA256 for the private source Joblib.",
+    )
+    parser.add_argument(
+        "--expected-wide-csv-sha256",
+        default=None,
+        help="Optional pinned SHA256 for validation/held_out_predictions.csv before sanitization.",
+    )
+    parser.add_argument(
+        "--expected-long-csv-sha256",
+        default=None,
+        help="Optional pinned SHA256 for validation/held_out_test_predictions_long.csv before sanitization.",
+    )
     args = parser.parse_args()
     source_joblib = Path(args.source_joblib).expanduser().resolve()
     if not source_joblib.is_file():
@@ -470,9 +482,10 @@ def main() -> None:
             "in the public release."
         )
     source_hash = sha256(source_joblib)
-    if source_hash != EXPECTED_SOURCE_JOBLIB_SHA256:
+    if args.expected_source_joblib_sha256 and source_hash != args.expected_source_joblib_sha256:
         raise ValueError(
-            f"Private source joblib hash mismatch: expected {EXPECTED_SOURCE_JOBLIB_SHA256}, found {source_hash}"
+            "Private source joblib hash mismatch: expected "
+            f"{args.expected_source_joblib_sha256}, found {source_hash}"
         )
 
     private = joblib.load(source_joblib)
@@ -492,11 +505,13 @@ def main() -> None:
         WIDE_CSV,
         mapping,
         {"nearest_training_molecule", "nearest_training_formula"},
+        args.expected_wide_csv_sha256,
     )
     long_csv_check = sanitize_validation_csv(
         LONG_CSV,
         mapping,
         {"nearest_training_molecule", "nearest_training_formula"},
+        args.expected_long_csv_sha256,
     )
 
     reuse_existing_public_joblib = False

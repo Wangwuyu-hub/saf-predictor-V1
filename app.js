@@ -15,7 +15,6 @@
     RF: "Random Forest",
     SVR: "Support vector regression",
     XGBoost: "XGBoost",
-    "derived: predicted Y01 × predicted Y03": "Derived: Y01 × Y03",
   };
 
   function escapeHtml(value) {
@@ -76,7 +75,9 @@
 
   function evidenceLabel(target, counts) {
     const total = Object.values(counts).reduce((sum, value) => sum + value, 0);
-    if (counts.constructed) return "constructed: 100%";
+    if (counts["author-curated independent response"]) {
+      return "independently collected response: 100%; source audit pending";
+    }
     const source = counts["source-supported"] || 0;
     const derived = counts["formula-derived"] || 0;
     return `source-supported: ${Math.round(1000 * source / total) / 10}%; formula-derived: ${Math.round(1000 * derived / total) / 10}%`;
@@ -92,8 +93,9 @@
     const meta = bundle.output_meta[target];
     const position = Math.max(0, Math.min(100, output.developmentRangePosition));
     const model = modelLabels[output.model] || output.model;
-    const caution = target === "Y04"
-      ? `<div class="property-caution"><strong>Y04 caution</strong><span>Y04 performed poorly on the internal holdout (R² = −0.021; MAE = 25.2 °C; n = 10). Do not use Y04 alone to rank or select compounds; experimental confirmation is required.</span></div>`
+    const y04 = validation?.metrics?.find((row) => row.target === "Y04");
+    const caution = target === "Y04" && y04
+      ? `<div class="property-caution"><strong>Y04 caution</strong><span>Internal-holdout performance: R² = ${y04.r2.toFixed(3)}, MAE = ${formatNumber(y04.mae, bundle.output_meta.Y04.digits)} °C (n = ${y04.n}). Do not use Y04 alone to rank or select compounds; experimental confirmation is required.</span></div>`
       : "";
     return `
       <article class="property-card">
@@ -273,14 +275,14 @@
   function renderValidation() {
     if (!validation) return;
     const metrics = validation.metrics;
-    const weak = metrics.filter((row) => row.r2 < 0);
+    const y04 = metrics.find((row) => row.target === "Y04");
     document.getElementById("validation-overview").innerHTML = `
       <div class="metric"><strong>${validation.n_records}</strong><span>Internal holdout records</span></div>
       <div class="metric"><strong>${validation.unique_formulae}</strong><span>Unique molecular formulae</span></div>
       <div class="metric"><strong>${validation.records_with_formula_seen_in_development}/10</strong><span>Formula seen in development set</span></div>
       <div class="metric"><strong>${formatNumber(validation.ood.median_distance_percentile, 1)}</strong><span>Median applicability-domain (AD) distance percentile</span></div>`;
-    document.getElementById("validation-alert").innerHTML = weak.length
-      ? `<div class="message message-warning">Y04 performed poorly on the internal holdout (R² = −0.021; MAE = 25.2 °C; n = 10). Do not use Y04 alone to rank or select compounds; experimental confirmation is required.</div>`
+    document.getElementById("validation-alert").innerHTML = y04 && y04.r2 < 0
+      ? `<div class="message message-warning">Y04 performed poorly on the internal holdout (R² = ${y04.r2.toFixed(3)}; MAE = ${formatNumber(y04.mae, bundle.output_meta.Y04.digits)} °C; n = ${y04.n}). Do not use Y04 alone to rank or select compounds; experimental confirmation is required.</div>`
       : "";
     document.getElementById("validation-table").innerHTML = `
       <thead><tr><th>Property</th><th>Deployed model</th><th>R²</th><th>RMSE</th><th>MAE</th><th>MedAE</th><th>Mean signed error</th><th>90% coverage</th><th>95% coverage</th></tr></thead>

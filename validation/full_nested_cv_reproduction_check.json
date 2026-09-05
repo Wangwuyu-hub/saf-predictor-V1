@@ -1,7 +1,7 @@
 {
   "status": "pass",
   "scope": "stable-key nested-CV reproduction comparison; not a byte-for-byte file comparison",
-  "generated_directory_label": "v1.0.0-full-rerun",
+  "generated_directory_label": "cv_v1_1_full_locked",
   "archived_directory_label": "artifacts/cv",
   "numeric_tolerance": 1e-12,
   "ignored_run_variant_fields": [
@@ -51,6 +51,8 @@
       "categorical_fields": [
         "property",
         "unit",
+        "target_records",
+        "target_formula_groups",
         "n_train",
         "n_test",
         "train_formula_groups",
@@ -112,8 +114,8 @@
       "generated_artifact": "generated-dir/oof_predictions.csv",
       "archived_artifact": "archive-dir/oof_predictions.csv",
       "pass": true,
-      "generated_rows": 8400,
-      "archived_rows": 8400,
+      "generated_rows": 7848,
+      "archived_rows": 7848,
       "duplicate_generated_keys": [],
       "duplicate_archived_keys": [],
       "missing_from_generated_count": 0,
@@ -206,7 +208,7 @@
       "maximum_absolute_numeric_difference": 0.0
     },
     {
-      "artifact": "y02_direct_vs_derived_sensitivity.csv",
+      "artifact": "y02_direct_vs_physical_baseline.csv",
       "keys": [
         "model",
         "approach"
@@ -220,11 +222,54 @@
         "oof_mae"
       ],
       "ignored_fields": [],
-      "generated_artifact": "generated-dir/y02_direct_vs_derived_sensitivity.csv",
-      "archived_artifact": "archive-dir/y02_direct_vs_derived_sensitivity.csv",
+      "generated_artifact": "generated-dir/y02_direct_vs_physical_baseline.csv",
+      "archived_artifact": "archive-dir/y02_direct_vs_physical_baseline.csv",
       "pass": true,
       "generated_rows": 8,
       "archived_rows": 8,
+      "duplicate_generated_keys": [],
+      "duplicate_archived_keys": [],
+      "missing_from_generated_count": 0,
+      "missing_from_generated_sample": [],
+      "unexpected_in_generated_count": 0,
+      "unexpected_in_generated_sample": [],
+      "categorical_mismatch_count": 0,
+      "categorical_mismatch_sample": [],
+      "nonnumeric_value_count": 0,
+      "nonnumeric_value_sample": [],
+      "numeric_mismatch_count": 0,
+      "numeric_mismatch_sample": [],
+      "maximum_absolute_numeric_difference": 0.0
+    },
+    {
+      "artifact": "xgboost_reference_vs_deployment_consistency.csv",
+      "keys": [
+        "target"
+      ],
+      "categorical_fields": [
+        "deployment_model",
+        "n",
+        "formula_groups",
+        "bootstrap_iterations",
+        "bootstrap_formula_groups"
+      ],
+      "numeric_fields": [
+        "prediction_pearson_r_xgboost_vs_deployment",
+        "xgboost_oof_r2",
+        "deployment_oof_r2",
+        "delta_r2_deployment_minus_xgboost",
+        "delta_r2_ci95_lower",
+        "delta_r2_ci95_upper",
+        "bootstrap_probability_delta_r2_gt_zero",
+        "prediction_r_ci95_lower",
+        "prediction_r_ci95_upper"
+      ],
+      "ignored_fields": [],
+      "generated_artifact": "generated-dir/xgboost_reference_vs_deployment_consistency.csv",
+      "archived_artifact": "archive-dir/xgboost_reference_vs_deployment_consistency.csv",
+      "pass": true,
+      "generated_rows": 7,
+      "archived_rows": 7,
       "duplicate_generated_keys": [],
       "duplicate_archived_keys": [],
       "missing_from_generated_count": 0,
@@ -246,17 +291,23 @@
       "comparison": "normalized stable analysis contract; timestamps, hashes, paths, and run metadata ignored",
       "pass": true,
       "compared_fields": [
+        "analysis",
         "records",
+        "formula_groups",
+        "target_records",
+        "target_formula_groups",
         "inputs",
         "targets",
         "models",
         "outer_folds",
         "inner_folds",
+        "selection_scoring",
         "base_seed",
-        "parameter_grid.XGBoost",
-        "parameter_grid.RF",
-        "parameter_grid.SVR",
-        "parameter_grid.ANN"
+        "seed_policy",
+        "smoke_grid",
+        "parameter_grids",
+        "fixed_parameters",
+        "y02_policy"
       ],
       "mismatch_count": 0,
       "mismatch_sample": []

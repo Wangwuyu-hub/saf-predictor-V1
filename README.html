@@ -44,10 +44,11 @@
     </section>
     <section class="card">
       <h2>Limitations</h2>
-      <div class="alert">Y04 performed poorly on the internal holdout (R² = −0.021; MAE = 25.2 °C; n = 10). Do not use Y04 alone to rank or select compounds; experimental confirmation is required.</div>
+      <div class="alert">For the frozen v1.1.0 models, Y04 had internal-holdout R² = −0.021 and MAE = 25.2 °C (n = 10). Do not use Y04 alone to rank or select compounds; consult the full uncertainty report and obtain experimental confirmation.</div>
       <ul>
         <li>The model applies only to pure hydrocarbon molecules represented using the documented descriptor definitions; it does not apply to mixtures, finished fuels, heteroatom-containing compounds, ions, or polymers.</li>
-        <li>Y02 is calculated from predicted Y01 × predicted Y03 rather than fitted independently.</li>
+        <li>Y02 is fitted independently using 162 identity-resolved development responses in 66 molecular-formula groups. Missing Y02 labels are excluded rather than filled with Y01 × Y03. Its held-out metrics use the eight records with a retained Y02 label; the two missing held-out labels are not imputed.</li>
+        <li>The Y02 values were collected separately from the current Y01 and Y03 columns, but direct experimental status, primary-source lineage, and measurement conditions remain unresolved for some rows. They are not uniformly classified as experimental or high-confidence measurements.</li>
         <li>Y04 is the pure-compound solid–liquid phase-transition temperature, not the freezing point of a finished fuel; Y05 is not a distillation curve, and Y07 is not a low-temperature aviation-fuel viscosity specification.</li>
         <li>This release is a provenance-aware hybrid dataset, not an all-experimental database. Record-property value origins, source links, and retained condition or method notes are provided in <a href="data/provenance_long.csv">data/provenance_long.csv</a> and <a href="data/references.csv">data/references.csv</a>.</li>
         <li>Nine of the ten records in the internal holdout set (eight of nine unique molecular formulae) share a formula with the development set. This internal holdout evaluation is not independent external, prospective, or experimental validation.</li>

@@ -1,9 +1,10 @@
 {
   "title": "SAF-Predict: Descriptor-Based Physicochemical Property Prediction for Hydrocarbon Fuel Candidates",
+  "version": "1.1.0",
   "upload_type": "software",
   "access_right": "open",
   "license": "mit",
-  "description": "Version 1.0.0 of SAF-Predict. The archived repository contains an offline browser predictor, trained model artifacts, a 300-record development set, a 10-record structurally stratified internal held-out test set, record-property provenance, reference metadata, grouped nested-cross-validation artifacts, and scripts for descriptor verification, training, export, and held-out evaluation. Code is MIT-licensed. Project-authored data curation is offered under CC BY 4.0 to the extent rights are held; third-party source material is not relicensed and remains subject to original source terms. The held-out set is not independent external validation, and the solid-liquid phase-transition model requires experimental confirmation.",
+  "description": "Version 1.1.0 of SAF-Predict. The archived repository contains an offline browser predictor, seven trained deployment models, a 300-record development set, a 10-record structurally stratified internal held-out test set, record-property provenance, reference metadata, grouped nested-cross-validation artifacts, and scripts for descriptor verification, training, export, and held-out evaluation. Volumetric net heat of combustion (Y02) is now modelled as an independently collected response: 162 development labels spanning 66 molecular-formula groups are used for fitting, 138 missing development labels are not imputed, and 8 of 10 held-out records have a Y02 reference label. The Y01 × Y03 product is retained only as a physical-baseline audit. Identity linkage is documented, but primary-source and measurement-condition verification remains incomplete for some legacy Y02 entries. Code is MIT-licensed. Project-authored data curation is offered under CC BY 4.0 to the extent rights are held; third-party source material is not relicensed and remains subject to original source terms. The held-out set is not independent external validation, and the solid–liquid phase-transition model requires experimental confirmation.",
   "creators": [
     {
       "name": "SAF-Predict contributors"

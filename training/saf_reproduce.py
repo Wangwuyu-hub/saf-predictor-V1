@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Portable SAF-Predict model-development and deployment export pipeline.
 
-The scientific defaults mirror the recorded Figure 4 and SAF-Predict v1.0.0
+The scientific defaults mirror the recorded Figure 4 and SAF-Predict v1.1.0
 workflow. All data and output locations are supplied on the command line; this
 module contains no machine-specific path.
 """
@@ -41,7 +41,8 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 DEFAULT_CONFIG = SCRIPT_DIR / "config.json"
 INPUT_CODES = [f"X{i:02d}" for i in range(1, 8)]
 TARGET_CODES = [f"Y{i:02d}" for i in range(1, 8)]
-DIRECTLY_MODELLED_TARGETS = ["Y01", "Y03", "Y04", "Y05", "Y06", "Y07"]
+DIRECTLY_MODELLED_TARGETS = TARGET_CODES.copy()
+FORMULA_PROVENANCE_TARGETS = ["Y01", "Y03", "Y04", "Y05", "Y06", "Y07"]
 
 TARGET_NAMES = {
     "Y01": "Mass-based net heat of combustion",
@@ -167,16 +168,17 @@ def load_config(path: Path) -> dict[str, Any]:
         raise ValueError("model_order must be XGBoost, RF, SVR, ANN")
     deployment = config["deployment_models"]
     if set(deployment) != set(DIRECTLY_MODELLED_TARGETS):
-        raise ValueError(
-            "deployment_models must define Y01 and Y03-Y07; Y02 is always derived"
-        )
+        raise ValueError("deployment_models must define all targets Y01-Y07")
     unknown = set(deployment.values()) - set(config["model_order"])
     if unknown:
         raise ValueError(f"Unknown deployment model families: {sorted(unknown)}")
-    if config["final_fit_target_order"] != DIRECTLY_MODELLED_TARGETS:
-        raise ValueError(
-            "final_fit_target_order must be Y01, Y03, Y04, Y05, Y06, Y07"
-        )
+    final_order = config["final_fit_target_order"]
+    if (
+        len(final_order) != len(DIRECTLY_MODELLED_TARGETS)
+        or len(set(final_order)) != len(final_order)
+        or set(final_order) != set(DIRECTLY_MODELLED_TARGETS)
+    ):
+        raise ValueError("final_fit_target_order must contain every target Y01-Y07 once")
     for model in config["model_order"]:
         if model not in config["fixed_parameters"] or model not in config["parameter_grids"]:
             raise ValueError(f"No estimator settings or parameter grid for {model}")
@@ -186,7 +188,7 @@ def load_config(path: Path) -> dict[str, Any]:
     if not isinstance(reconstruction.get("reference_map_column"), str):
         raise ValueError("provenance_reconstruction.reference_map_column must be a string")
     formula_references = reconstruction.get("formula_derived_reference_by_target")
-    if set(formula_references or {}) != set(DIRECTLY_MODELLED_TARGETS):
+    if set(formula_references or {}) != set(FORMULA_PROVENANCE_TARGETS):
         raise ValueError(
             "provenance_reconstruction must define formula-derived references for Y01 and Y03-Y07"
         )
@@ -212,7 +214,11 @@ def reconstruct_provenance_classes(data: pd.DataFrame, config: dict[str, Any]) -
             data[output_column] = data[output_column].fillna("unspecified").astype(str)
             continue
         if target == "Y02":
-            data[output_column] = "constructed"
+            data[output_column] = np.where(
+                data["Y02"].notna(),
+                "author-curated independent response",
+                "not available",
+            )
             continue
         if map_column not in data.columns:
             data[output_column] = "unspecified"
@@ -260,26 +266,14 @@ def load_development_csv(
         data["molecule"] = data["record_id"]
     for code in [*INPUT_CODES, *TARGET_CODES]:
         data[code] = pd.to_numeric(data[code], errors="raise")
-    # Y02 was constructed in the source workbook as Y01 x Y03. Recompute the
-    # identity after CSV parsing so its IEEE-754 values match the workbook
-    # formula results used by the archived Figure 4 benchmark. Decimal CSV
-    # round-tripping can otherwise change a few values by about 7e-15, which is
-    # enough to alter tie-sensitive RF splits and ANN optimization paths.
-    supplied_y02 = data["Y02"].to_numpy(dtype=float, copy=True)
-    reconstructed_y02 = (
-        data["Y01"].to_numpy(dtype=float) * data["Y03"].to_numpy(dtype=float)
-    )
-    if not np.allclose(supplied_y02, reconstructed_y02, rtol=0.0, atol=1e-12):
-        maximum_difference = float(np.max(np.abs(supplied_y02 - reconstructed_y02)))
-        raise ValueError(
-            "Y02 must equal Y01 multiplied by Y03; maximum absolute difference "
-            f"was {maximum_difference:.6g}"
-        )
-    data["Y02"] = reconstructed_y02
-    matrix = data[[*INPUT_CODES, *TARGET_CODES]].to_numpy(dtype=float)
+    complete_codes = [*INPUT_CODES, *FORMULA_PROVENANCE_TARGETS]
+    matrix = data[complete_codes].to_numpy(dtype=float)
     if not np.isfinite(matrix).all():
-        raise ValueError("Input or target matrix contains missing or non-finite values")
-    variances = data[[*INPUT_CODES, *TARGET_CODES]].var(ddof=1)
+        raise ValueError("Inputs and Y01/Y03-Y07 must be complete and finite")
+    y02_values = data["Y02"].dropna().to_numpy(dtype=float)
+    if len(y02_values) == 0 or not np.isfinite(y02_values).all():
+        raise ValueError("Y02 must contain at least one finite independent response")
+    variances = data[[*INPUT_CODES, *TARGET_CODES]].var(ddof=1, skipna=True)
     constant = variances.index[variances <= 0].tolist()
     if constant:
         raise ValueError(f"Constant model columns are not supported: {constant}")
@@ -288,14 +282,18 @@ def load_development_csv(
 
 
 def validate_group_counts(data: pd.DataFrame, config: dict[str, Any]) -> None:
-    group_count = data["molecular_formula"].nunique()
     required = max(
         int(config["outer_folds"]),
         int(config["inner_folds"]),
         int(config["final_cv_folds"]),
     )
-    if group_count < required:
-        raise ValueError(f"At least {required} molecular-formula groups are required")
+    for target in TARGET_CODES:
+        group_count = data.loc[data[target].notna(), "molecular_formula"].nunique()
+        if group_count < required:
+            raise ValueError(
+                f"{target} requires at least {required} molecular-formula groups; "
+                f"found {group_count}"
+            )
 
 
 def build_outer_splits(
@@ -462,8 +460,19 @@ def run_nested_cv(
     for target_index, target in enumerate(TARGET_CODES):
         y = data[target].to_numpy(dtype=float)
         provenance = data[f"provenance_{target}"].to_numpy(dtype=str)
+        available = np.isfinite(y)
+        target_records = int(available.sum())
+        target_groups = int(data.loc[available, "molecular_formula"].nunique())
         for model_index, model_name in enumerate(config["model_order"]):
-            for outer_fold, (train_index, test_index) in enumerate(splits, start=1):
+            for outer_fold, (full_train_index, full_test_index) in enumerate(
+                splits, start=1
+            ):
+                train_index = full_train_index[available[full_train_index]]
+                test_index = full_test_index[available[full_test_index]]
+                if len(test_index) < 2:
+                    raise ValueError(
+                        f"{target} outer fold {outer_fold} has fewer than two labelled records"
+                    )
                 train_group_count = len(set(groups[train_index]))
                 if train_group_count < inner_folds:
                     raise ValueError(
@@ -501,6 +510,8 @@ def run_nested_cv(
                         "target": target,
                         "property": TARGET_NAMES[target],
                         "unit": TARGET_UNITS[target],
+                        "target_records": target_records,
+                        "target_formula_groups": target_groups,
                         "outer_fold": outer_fold,
                         "n_train": int(len(train_index)),
                         "n_test": int(len(test_index)),
@@ -552,7 +563,7 @@ def run_nested_cv(
     )
     write_csv(output_dir / "model_target_summary.csv", summary)
     write_csv(output_dir / "provenance_stratified_metrics.csv", provenance_metrics)
-    write_csv(output_dir / "y02_direct_vs_derived_sensitivity.csv", sensitivity)
+    write_csv(output_dir / "y02_direct_vs_physical_baseline.csv", sensitivity)
 
     protocol = {
         "analysis": "four-model nested grouped cross-validation",
@@ -561,6 +572,13 @@ def run_nested_cv(
         "config_sha256": sha256(config_path),
         "records": len(data),
         "formula_groups": int(data["molecular_formula"].nunique()),
+        "target_records": {
+            target: int(data[target].notna().sum()) for target in TARGET_CODES
+        },
+        "target_formula_groups": {
+            target: int(data.loc[data[target].notna(), "molecular_formula"].nunique())
+            for target in TARGET_CODES
+        },
         "inputs": INPUT_CODES,
         "targets": TARGET_CODES,
         "models": list(config["model_order"]),
@@ -573,8 +591,9 @@ def run_nested_cv(
         "parameter_grids": config["parameter_grids"],
         "fixed_parameters": config["fixed_parameters"],
         "y02_policy": (
-            "Direct Y02 models are retained only as nested-CV benchmarks; deployed Y02 is "
-            "predicted Y01 multiplied by predicted Y03"
+            "Y02 is an independently collected response and is modelled directly on "
+            "available complete cases; predicted Y01 multiplied by predicted Y03 is "
+            "retained only as a physical-baseline sensitivity analysis"
         ),
         "held_out_data_accessed": False,
         "software_versions": software_versions(),
@@ -590,7 +609,7 @@ def run_nested_cv(
             "oof_predictions.csv",
             "model_target_summary.csv",
             "provenance_stratified_metrics.csv",
-            "y02_direct_vs_derived_sensitivity.csv",
+            "y02_direct_vs_physical_baseline.csv",
             "protocol.json",
         ]
     }
@@ -621,7 +640,8 @@ def summarize_nested(
                 (folds["target"] == target) & (folds["model"] == model_name)
             ].sort_values("outer_fold")
             oof_block = oof[(oof["target"] == target) & (oof["model"] == model_name)]
-            if len(fold_block) != outer_folds or len(oof_block) != len(data):
+            expected_target_records = int(data[target].notna().sum())
+            if len(fold_block) != outer_folds or len(oof_block) != expected_target_records:
                 raise AssertionError(f"Incomplete nested-CV block: {target}/{model_name}")
             summary_rows.append(
                 {
@@ -681,7 +701,7 @@ def summarize_nested(
         merged["pred_derived"] = merged["pred_y01"] * merged["pred_y03"]
         for approach, column in [
             ("Direct model", "pred_direct"),
-            ("Product of mass-based NHOC and density predictions", "pred_derived"),
+            ("Product of Y01 and Y03 predictions (physical baseline)", "pred_derived"),
         ]:
             sensitivity_rows.append(
                 {
@@ -708,7 +728,10 @@ def nested_qa(
     model_order: list[str],
 ) -> dict[str, Any]:
     expected_blocks = len(model_order) * len(TARGET_CODES)
-    expected_ids = set(data["record_id"])
+    expected_ids_by_target = {
+        target: set(data.loc[data[target].notna(), "record_id"].astype(str))
+        for target in TARGET_CODES
+    }
     formula_disjoint = True
     for fold in range(1, outer_folds + 1):
         test_formulae = set(
@@ -719,13 +742,21 @@ def nested_qa(
         )
         formula_disjoint &= not bool(test_formulae & train_formulae)
     complete_oof_ids = all(
-        set(block["record_id"].astype(str)) == expected_ids
-        for _, block in oof.groupby(["model", "target"], sort=False)
+        set(block["record_id"].astype(str)) == expected_ids_by_target[target]
+        for (_, target), block in oof.groupby(["model", "target"], sort=False)
+    )
+    expected_oof_rows = len(model_order) * sum(
+        len(expected_ids_by_target[target]) for target in TARGET_CODES
     )
     checks = {
         "record_ids_unique": data["record_id"].nunique() == len(data),
-        "all_model_values_finite": bool(
-            np.isfinite(data[[*INPUT_CODES, *TARGET_CODES]].to_numpy(dtype=float)).all()
+        "all_inputs_and_non_y02_targets_finite": bool(
+            np.isfinite(
+                data[[*INPUT_CODES, *FORMULA_PROVENANCE_TARGETS]].to_numpy(dtype=float)
+            ).all()
+        ),
+        "all_available_y02_values_finite": bool(
+            np.isfinite(data["Y02"].dropna().to_numpy(dtype=float)).all()
         ),
         "fold_manifest_covers_each_record_once": (
             len(manifest) == len(data) and manifest["record_id"].nunique() == len(data)
@@ -737,9 +768,9 @@ def nested_qa(
             == expected_blocks * outer_folds
         ),
         "oof_blocks_complete": (
-            len(oof) == expected_blocks * len(data)
+            len(oof) == expected_oof_rows
             and oof[["model", "target", "record_id"]].drop_duplicates().shape[0]
-            == expected_blocks * len(data)
+            == expected_oof_rows
             and complete_oof_ids
         ),
         "all_metrics_finite": bool(
@@ -749,7 +780,7 @@ def nested_qa(
             len(summary) == expected_blocks
             and summary[["model", "target"]].drop_duplicates().shape[0] == expected_blocks
         ),
-        "y02_is_benchmark_only_in_nested_cv": True,
+        "y02_is_directly_modelled_on_available_labels": True,
         "held_out_data_not_accessed": True,
     }
     return {
@@ -757,6 +788,9 @@ def nested_qa(
         "checks": checks,
         "records": len(data),
         "formula_groups": int(data["molecular_formula"].nunique()),
+        "target_records": {
+            target: len(expected_ids_by_target[target]) for target in TARGET_CODES
+        },
         "outer_fold_sizes": {
             str(key): int(value)
             for key, value in manifest["outer_fold"].value_counts().sort_index().items()
@@ -778,23 +812,9 @@ def build_intervals(
     selected: dict[str, pd.DataFrame] = {}
     for target, model_name in deployment.items():
         block = oof[(oof["target"] == target) & (oof["model"] == model_name)].copy()
-        if len(block) != len(data):
+        if len(block) != int(data[target].notna().sum()):
             raise ValueError(f"Incomplete OOF block for {target}/{model_name}")
         selected[target] = block
-
-    y01 = selected["Y01"][["record_id", "outer_fold", "molecular_formula", "y_pred"]]
-    y01 = y01.rename(columns={"y_pred": "pred_y01"})
-    y03 = selected["Y03"][["record_id", "outer_fold", "y_pred"]]
-    y03 = y03.rename(columns={"y_pred": "pred_y03"})
-    truth = data[["record_id", "molecular_formula", "Y02"]].rename(
-        columns={"Y02": "y_true"}
-    )
-    y02 = y01.merge(y03, on=["record_id", "outer_fold"], validate="one_to_one")
-    y02["y_pred"] = y02["pred_y01"] * y02["pred_y03"]
-    y02 = y02.drop(columns="molecular_formula").merge(
-        truth, on="record_id", validate="one_to_one"
-    )
-    selected["Y02"] = y02
 
     intervals: dict[str, Any] = {}
     for target in TARGET_CODES:
@@ -805,7 +825,8 @@ def build_intervals(
             .max()
             .to_numpy(dtype=float)
         )
-        target_iqr = float(data[target].quantile(0.75) - data[target].quantile(0.25))
+        target_values = data[target].dropna()
+        target_iqr = float(target_values.quantile(0.75) - target_values.quantile(0.25))
         if target_iqr <= 0:
             raise ValueError(f"Non-positive target IQR for {target}")
         q90 = finite_group_quantile(group_scores, 0.90)
@@ -946,14 +967,16 @@ def export_browser_model(model: Any, model_name: str, x_reference: np.ndarray) -
         return export_xgboost(model, x_reference)
     raise ValueError(
         f"Browser export for {model_name} is not implemented. ANN remains a comparison model "
-        "in the recorded v1.0.0 deployment."
+        "and cannot be selected for the browser deployment."
     )
 
 
 def training_ranges(data: pd.DataFrame, codes: list[str]) -> dict[str, Any]:
     ranges: dict[str, Any] = {}
     for code in codes:
-        values = data[code].to_numpy(dtype=float)
+        values = data[code].dropna().to_numpy(dtype=float)
+        if len(values) == 0:
+            raise ValueError(f"No finite values available for range {code}")
         ranges[code] = {
             "min": float(np.min(values)),
             "q05": float(np.quantile(values, 0.05)),
@@ -969,7 +992,6 @@ def predict_deployment(models: dict[str, Any], x: np.ndarray) -> dict[str, np.nd
         target: np.asarray(model.predict(x), dtype=float).reshape(-1)
         for target, model in models.items()
     }
-    predictions["Y02"] = predictions["Y01"] * predictions["Y03"]
     return {target: predictions[target] for target in TARGET_CODES}
 
 
@@ -1027,6 +1049,10 @@ def train_and_export(
     for deployment_index, target in enumerate(config["final_fit_target_order"]):
         model_name = deployment[target]
         seed = final_seed(config, deployment_index)
+        available = data[target].notna().to_numpy()
+        target_x = x[available]
+        target_y = data.loc[available, target].to_numpy(dtype=float)
+        target_groups = groups[available]
         search = GridSearchCV(
             make_estimator(config, model_name, seed),
             model_grid(config, model_name, smoke=False),
@@ -1037,14 +1063,17 @@ def train_and_export(
             error_score="raise",
             return_train_score=False,
         )
-        search.fit(x, data[target].to_numpy(dtype=float), groups=groups)
+        search.fit(target_x, target_y, groups=target_groups)
         fitted[target] = search.best_estimator_
         summary_rows.append(
             {
                 "target": target,
                 "property": TARGET_NAMES[target],
                 "deployment_model": model_name,
-                "selection_data": "development CSV only",
+                "selection_data": (
+                    f"development CSV complete cases for {target} "
+                    f"(n={len(target_y)}, formula groups={len(set(target_groups))})"
+                ),
                 "selection_cv": (
                     f"GroupKFold(n_splits={config['final_cv_folds']}), "
                     "groups=molecular_formula"
@@ -1082,10 +1111,17 @@ def train_and_export(
     provenance_counts = {
         target: {
             str(key): int(value)
-            for key, value in data[f"provenance_{target}"]
+            for key, value in data.loc[data[target].notna(), f"provenance_{target}"]
             .value_counts()
             .sort_index()
             .items()
+        }
+        for target in TARGET_CODES
+    }
+    label_availability = {
+        target: {
+            "available": int(data[target].notna().sum()),
+            "missing": int(data[target].isna().sum()),
         }
         for target in TARGET_CODES
     }
@@ -1095,6 +1131,13 @@ def train_and_export(
         "input_csv_sha256": sha256(input_path),
         "records": len(data),
         "formula_groups": int(data["molecular_formula"].nunique()),
+        "target_records": {
+            target: int(data[target].notna().sum()) for target in TARGET_CODES
+        },
+        "target_formula_groups": {
+            target: int(data.loc[data[target].notna(), "molecular_formula"].nunique())
+            for target in TARGET_CODES
+        },
         "config_sha256": sha256(config_path),
         "fold_manifest_sha256": sha256(fold_manifest_path),
         "oof_predictions_sha256": sha256(oof_path),
@@ -1103,6 +1146,7 @@ def train_and_export(
         "seed_policy": config.get("seed_policy"),
     }
     joblib_payload = {
+        "schema_version": 2,
         "version": version,
         "input_codes": INPUT_CODES,
         "target_codes": TARGET_CODES,
@@ -1111,10 +1155,7 @@ def train_and_export(
         "ood": ood,
         "input_ranges": training_ranges(data, INPUT_CODES),
         "output_ranges": training_ranges(data, TARGET_CODES),
-        "deployment_models": {
-            **deployment,
-            "Y02": "derived: predicted Y01 multiplied by predicted Y03",
-        },
+        "deployment_models": deployment,
         "training": training_metadata,
     }
     joblib_name = (
@@ -1130,7 +1171,7 @@ def train_and_export(
         for target in DIRECTLY_MODELLED_TARGETS
     }
     browser_bundle = {
-        "schema_version": 1,
+        "schema_version": 2,
         "platform": "SAF-Predict",
         "version": version,
         "generated_at_utc": generated_at,
@@ -1140,14 +1181,12 @@ def train_and_export(
         "output_meta": OUTPUT_META,
         "input_ranges": training_ranges(data, INPUT_CODES),
         "output_ranges": training_ranges(data, TARGET_CODES),
-        "deployment_models": {
-            **deployment,
-            "Y02": "derived: predicted Y01 multiplied by predicted Y03",
-        },
+        "deployment_models": deployment,
         "models": exported_models,
         "intervals": intervals,
         "ood": ood,
         "provenance_counts": provenance_counts,
+        "label_availability": label_availability,
         "training": training_metadata,
         "claim_boundary": (
             "Research-stage physicochemical prescreening of pure hydrocarbon molecules "
@@ -1160,19 +1199,6 @@ def train_and_export(
     js_path = output_dir / "model_bundle.js"
     write_js_bundle(js_path, browser_bundle)
 
-    summary_rows.append(
-        {
-            "target": "Y02",
-            "property": TARGET_NAMES["Y02"],
-            "deployment_model": "Derived from predicted Y01 and predicted Y03",
-            "selection_data": "development CSV only",
-            "selection_cv": "Not applicable",
-            "selection_metric": "Physical identity",
-            "best_cv_rmse": np.nan,
-            "best_params": "{}",
-            "random_seed": np.nan,
-        }
-    )
     summary = pd.DataFrame(summary_rows)
     order = {code: index for index, code in enumerate(TARGET_CODES)}
     summary["target_order"] = summary["target"].map(order)
@@ -1222,11 +1248,15 @@ def train_and_export(
             "of nested-CV out-of-fold absolute residuals."
         ),
         "applicability_method": ood["method"],
-        "y02_policy": "predicted Y02 equals predicted Y01 multiplied by predicted Y03",
+        "y02_policy": (
+            "Y02 is predicted by its separately fitted deployment model trained on "
+            "162 identity-resolved independent responses in 66 molecular-formula groups."
+        ),
         "software_versions": software_versions(),
         "deidentified_ood_records": bool(deidentify_ood),
         "limitations": [
             "The held-out test set is not read by this training and export entry point.",
+            "Y02 labels were independently collected, but row-level primary-source and measurement-condition verification remains incomplete.",
             "The output is for research-stage pure-compound prescreening, not finished-fuel certification.",
             "The public OOD record vectors may be linkable to a separately known source dataset.",
         ],
@@ -1261,7 +1291,7 @@ def train_and_export(
         "joblib_sha256": sha256(joblib_path),
         "browser_bundle": str(js_path),
         "browser_bundle_sha256": sha256(js_path),
-        "y02_policy": browser_bundle["deployment_models"]["Y02"],
+        "y02_policy": model_card["y02_policy"],
     }
 
 
@@ -1310,7 +1340,7 @@ def build_parser() -> argparse.ArgumentParser:
     add_data_arguments(export)
     export.add_argument("--cv-dir", type=Path, required=True)
     export.add_argument("--output-dir", type=Path, default=Path("run_outputs/release"))
-    export.add_argument("--version", default="1.0.0")
+    export.add_argument("--version", default="1.1.0")
     export.add_argument("--n-jobs", type=int, default=1)
     export.add_argument(
         "--deidentify-ood",
@@ -1324,7 +1354,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     add_data_arguments(all_command)
     all_command.add_argument("--output-dir", type=Path, default=Path("run_outputs"))
-    all_command.add_argument("--version", default="1.0.0")
+    all_command.add_argument("--version", default="1.1.0")
     all_command.add_argument("--n-jobs", type=int, default=1)
     all_command.add_argument(
         "--deidentify-ood",
@@ -1343,8 +1373,10 @@ def main() -> None:
     validate_group_counts(data, config)
 
     if args.command == "validate":
-        identity_error = float(
-            np.max(np.abs(data["Y02"] - data["Y01"] * data["Y03"]))
+        y02_available = data["Y02"].notna()
+        paired_difference = (
+            data.loc[y02_available, "Y02"]
+            - data.loc[y02_available, "Y01"] * data.loc[y02_available, "Y03"]
         )
         print(
             json.dumps(
@@ -1354,8 +1386,21 @@ def main() -> None:
                     "formula_groups": int(data["molecular_formula"].nunique()),
                     "input_csv_sha256": sha256(input_path),
                     "config_sha256": sha256(config_path),
-                    "max_abs_source_Y02_minus_Y01_times_Y03": identity_error,
-                    "deployed_Y02_rule": "predicted Y01 multiplied by predicted Y03",
+                    "target_records": {
+                        target: int(data[target].notna().sum()) for target in TARGET_CODES
+                    },
+                    "target_formula_groups": {
+                        target: int(
+                            data.loc[data[target].notna(), "molecular_formula"].nunique()
+                        )
+                        for target in TARGET_CODES
+                    },
+                    "Y02_independent_minus_physical_baseline": {
+                        "n": int(y02_available.sum()),
+                        "mean_difference": float(paired_difference.mean()),
+                        "max_absolute_difference": float(paired_difference.abs().max()),
+                    },
+                    "deployed_Y02_rule": "separately fitted direct-response model",
                 },
                 indent=2,
             )

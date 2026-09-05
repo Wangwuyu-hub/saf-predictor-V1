@@ -156,7 +156,8 @@
         <article class="card prose-card">
           <h2>Fixed serialized models</h2>
           <div id="model-mapping"></div>
-          <p>Volumetric net heat of combustion (Y02) is not fitted independently. It is calculated exactly as predicted Y01 × predicted Y03 to preserve physical consistency between heat of combustion and density.</p>
+          <p>Volumetric net heat of combustion (Y02) is predicted by a separately fitted random-forest model trained on 162 identity-resolved development responses spanning 66 molecular-formula groups. Missing Y02 labels were excluded rather than filled with Y01 × Y03.</p>
+          <p>The retained Y02 values were collected independently of the current Y01 and Y03 release columns. Identity linkage is documented, but direct experimental status, primary-source lineage, and measurement conditions remain unresolved for some rows; Y02 is therefore not presented uniformly as an experimental or high-confidence endpoint.</p>
         </article>
         <article class="card prose-card">
           <h2>Development-label provenance</h2>

@@ -1,44 +1,60 @@
 {
-  "check_scope": "Released-file integrity and internal consistency only; not an independent audit or proof of analysis chronology.",
-  "recorded_original_check_result": {
-    "all_listed_checks_passed": true,
-    "private_joblib_hash_matches_recorded_identifier": true,
-    "held_out_prediction_rows": 10,
-    "record_property_rows": 70,
-    "metric_rows": 7,
-    "all_predictions_finite": true,
-    "all_metrics_finite": true,
-    "y02_identity_within_1e-12": true
+  "check_scope": "Self-generated released-file integrity and internal-consistency checks; not an independent audit or proof of analysis chronology.",
+  "version": "1.1.0",
+  "all_listed_checks_passed": true,
+  "bundle_schema_version": 2,
+  "separately_fitted_model_targets": [
+    "Y01",
+    "Y02",
+    "Y03",
+    "Y04",
+    "Y05",
+    "Y06",
+    "Y07"
+  ],
+  "deployment_models": {
+    "Y01": "RF",
+    "Y02": "RF",
+    "Y03": "SVR",
+    "Y04": "XGBoost",
+    "Y05": "SVR",
+    "Y06": "SVR",
+    "Y07": "SVR"
   },
-  "author_reported_workflow": {
-    "sheet2_excluded_from_model_selection_and_tuning": true,
-    "predictions_generated_before_reference_value_scoring": true,
-    "post_test_refitting_performed": false,
-    "independently_timestamped_pre_evaluation_release_present_in_repository": false,
-    "note": "These workflow statements are author-reported metadata and are not treated as automated integrity-check results."
+  "held_out_prediction_rows": 10,
+  "record_property_rows": 70,
+  "metric_rows": 7,
+  "label_available_by_target": {
+    "Y01": 10,
+    "Y02": 8,
+    "Y03": 10,
+    "Y04": 10,
+    "Y05": 10,
+    "Y06": 10,
+    "Y07": 10
   },
-  "wording_update_record": {
-    "metadata_wording_updated_after_scoring": true,
-    "scope": "The test-set label was shortened to internal held-out test set; predictions, reference values, and metrics were unchanged in the recorded private-source artifacts."
-  },
-  "source_artifact_identifiers": {
-    "private_joblib_sha256": "e5a648cba47e0ba98e902144e45b937610f82c0d96719b4ef248cf3ab903ef73",
-    "original_wide_holdout_predictions_sha256": "040a212e0ff390af7d7ec8a0e68e7c77c5c19b09d2bbd3c6b274a5b245e19018",
-    "original_long_holdout_predictions_sha256": "a9132b32e99880d21371a000b4cd2cf6b924fa28c3a6044945ed1abc02a47581",
-    "recorded_original_held_out_test_metrics_sha256": "688a08fd464c6de65ca6eb66af1dfc6d43d87ef6068f89af2ec8ba8c1ebede25",
-    "original_test_summary_sha256": "354c10bcb68004bb60cca3f27cdda8e93c8f51c51f8f8d000038ab7bdfad70d0"
-  },
+  "all_predictions_finite": true,
+  "Y02_separately_modelled_canary": true,
+  "maximum_abs_Y02_prediction_minus_Y01_times_Y03": 4.145832190886395,
+  "source_private_joblib_sha256": "0e00a01bd287d098ba5feb597bdf14d5e99534c8f71b130ffe96375481acdfeb",
   "public_deidentified_artifacts": {
     "joblib_path": "models/SAF_Predict_public_model_bundle_v1.joblib",
-    "joblib_sha256": "d4ecab30c318d1923f27b7f0acb1fb117510edb5a603857903d6568c736477a7",
+    "joblib_sha256": "3b28cc27600af8f6393d7e1df8359d93a9d5b293b7ad4ef8e5e0036107741158",
     "wide_holdout_predictions_path": "validation/held_out_predictions.csv",
-    "wide_holdout_predictions_sha256": "0c33f25d14867300b76e85c22d318d04c9c4653798554201c9bfab3758f405a4",
+    "wide_holdout_predictions_sha256": "dec53205aa548e4c58d3bdeb1fafc9373f1de6e1c8885af3e75d2b7f384f8f74",
     "long_holdout_predictions_path": "validation/held_out_test_predictions_long.csv",
-    "long_holdout_predictions_sha256": "18eadf1f77c0c7ecbd248055974d3556c9840af3683cb3cdb8ec9d696e748cc1",
+    "long_holdout_predictions_sha256": "540dc851cdb4fa23547ea44c48a15760209152306b38515c2170c958700cd715",
     "held_out_test_metrics_path": "validation/held_out_test_metrics.csv",
-    "held_out_test_metrics_sha256": "20341d84fca41e2199eea031a32523a58381efba7e786d7ee89f986ecb76977c",
-    "held_out_test_summary_path": "validation/held_out_test_summary.json",
-    "held_out_test_summary_sha256": "9fdd5f43acb9fdb41c785f60b5745834eed3501befe9a890dcddac9e60b030b3",
-    "hash_status": "Public artifact hashes populated after metadata reduction and release assembly."
-  }
+    "held_out_test_metrics_sha256": "0e403dca6492eaa26f5fae4ce09883eab1332a8ef8c4c14a059fc74d8e8ce197",
+    "source_supported_metrics_path": "validation/held_out_source_supported_metrics.csv",
+    "source_supported_metrics_sha256": "058ea45600a5b60ed810caf3cb2ee82c9675465608cd09da6ecd41ff5bb1e711"
+  },
+  "sanitization_checks_sha256": "64d30cf507eab9c131b0de79e549855f0be5ef31bfa7b5087544ed6e8c2a6315",
+  "sanitization_semantic_equivalence_passed": true,
+  "author_reported_workflow": {
+    "held_out_set_excluded_from_model_selection_and_tuning": true,
+    "post_test_refitting_performed": false,
+    "independently_timestamped_pre_evaluation_release_present_in_repository": false
+  },
+  "claim_boundary": "This small test set was held out within the same database-building workflow. It does not establish independent external, prospective, new-chemical-space, OOD, or experimental validation."
 }

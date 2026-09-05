@@ -1,6 +1,7 @@
-SAF-Predict 1.0.0
+SAF-Predict 1.1.0
 Development set: data/development.csv (n = 300; 73 molecular-formula groups)
-Internal held-out test: data/held_out_test.csv (n = 10; 9 formula groups)
-Model release: fixed serialized artifacts
+Independently collected Y02 development labels: n = 162; 66 molecular-formula groups; 138 missing labels are not imputed
+Internal held-out test: data/held_out_test.csv (n = 10; 9 formula groups; Y02 reference labels n = 8)
+Model release: seven fixed serialized deployment models; Y02 uses a separately fitted random forest
 Reproducibility archive: data, provenance, sources, grouped folds, training scripts, pinned environment, and evaluation checks included
 Research-stage physicochemical prescreening only.

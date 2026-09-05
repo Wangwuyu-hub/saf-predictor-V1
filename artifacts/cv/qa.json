@@ -1,52 +1,43 @@
 {
-  "pass": true,
+  "all_checks_passed": true,
   "checks": {
-    "sheet1_records_300": true,
     "record_ids_unique": true,
-    "inputs_exact": true,
-    "targets_exact": true,
-    "all_values_complete_finite": true,
-    "fold_manifest_300": true,
-    "five_folds_each_60": true,
-    "no_formula_crosses_outer_folds": true,
-    "fold_scores_140": true,
-    "five_scores_per_model_target": true,
-    "all_fold_scores_finite": true,
-    "fold_formula_overlap_zero": true,
-    "oof_predictions_8400": true,
-    "oof_300_per_model_target": true,
-    "oof_ids_complete_every_block": true,
-    "oof_fold_matches_manifest": true,
-    "fold_r2_recalculates": true,
-    "summary_28": true,
-    "summary_finite": true,
-    "sheet2_excluded_protocol": true,
-    "grouped_nested_cv_protocol": true,
-    "within_fold_scaling_protocol": true
+    "all_inputs_and_non_y02_targets_finite": true,
+    "all_available_y02_values_finite": true,
+    "fold_manifest_covers_each_record_once": true,
+    "formula_groups_disjoint_between_outer_train_and_validation": true,
+    "outer_fold_score_blocks_complete": true,
+    "oof_blocks_complete": true,
+    "all_metrics_finite": true,
+    "summary_has_28_model_target_rows": true,
+    "y02_is_directly_modelled_on_available_labels": true,
+    "held_out_data_not_accessed": true
   },
-  "fold_sizes": {
+  "records": 300,
+  "formula_groups": 73,
+  "target_records": {
+    "Y01": 300,
+    "Y02": 162,
+    "Y03": 300,
+    "Y04": 300,
+    "Y05": 300,
+    "Y06": 300,
+    "Y07": 300
+  },
+  "outer_fold_sizes": {
     "1": 60,
     "2": 60,
     "3": 60,
     "4": 60,
     "5": 60
   },
-  "unique_formulae": 73,
-  "fold_score_rows": 140,
-  "oof_rows": 8400,
-  "summary_rows": 28,
-  "model_versions": {
-    "python": "3.12.13",
-    "numpy": "2.5.2",
-    "pandas": "3.0.5",
-    "scipy": "1.18.1",
-    "scikit_learn": "1.9.0",
-    "xgboost": "3.4.1"
-  },
   "files": {
-    "fold_manifest_sha256": "2a4afdfe8fa4f973ae2c51776883121935493eff0a268171b0970cad37d194c9",
-    "fold_scores_sha256": "6b6f7cd293ff5c409d33dee397ccac326ce540677635bc0ff827c0080d38f202",
-    "oof_sha256": "16e705a986b9adc140792fad8bd9571238677b77cc5b506e50808f676491174f",
-    "summary_sha256": "d7a375b16677033a48f99508d4a7e2e28e80720e3b0bee282728077daff53ce5"
+    "fold_manifest.csv": "ebad2e755cf408611e405501a1dca899ef9f9c188970e9b089a8a4544c5f30db",
+    "outer_fold_scores.csv": "7b6b0c300599290e05128551850a4e8d2b6dc574f6312cd8c2881015217d1f36",
+    "oof_predictions.csv": "c630628fbb87a8e19eda700ee380be8d0f0d9e9bcaac68a26c0e17e08b960a3d",
+    "model_target_summary.csv": "208409234aea2a9a452cf794dd3a12ae317342ffdd7a74412c8054b77f19f430",
+    "provenance_stratified_metrics.csv": "1f12272bf8343161212bcfc774a7ad30adce6fbfbe1bb0e4bf0610f218e887d6",
+    "y02_direct_vs_physical_baseline.csv": "7adf495ec9fa6e3e5ae9b3c18f224265b5e603ab234635cc1b6b1b7c6bf78fe6",
+    "protocol.json": "bef699487ec4139945bffc93615301c91b4d5f96fb9cd2ec99dafbf50e0a6bd0"
   }
 }

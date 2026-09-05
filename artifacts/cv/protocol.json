@@ -1,6 +1,28 @@
 {
-  "data_sheet": "Sheet1",
-  "n_records": 300,
+  "analysis": "four-model nested grouped cross-validation",
+  "input_csv_name": "development.csv",
+  "input_csv_sha256": "b5c8d7d783094f4393bb3fa8d9ea02510aa1f337519fec4fb2cd0c328263b3f2",
+  "config_sha256": "9210fdeec0a98fe763528cee4452eb329dc6921670deca6efb35d9a23ac29329",
+  "records": 300,
+  "formula_groups": 73,
+  "target_records": {
+    "Y01": 300,
+    "Y02": 162,
+    "Y03": 300,
+    "Y04": 300,
+    "Y05": 300,
+    "Y06": 300,
+    "Y07": 300
+  },
+  "target_formula_groups": {
+    "Y01": 73,
+    "Y02": 66,
+    "Y03": 73,
+    "Y04": 73,
+    "Y05": 73,
+    "Y06": 73,
+    "Y07": 73
+  },
   "inputs": [
     "X01",
     "X02",
@@ -19,127 +41,145 @@
     "Y06",
     "Y07"
   ],
-  "held_out_sheet": "Sheet2",
-  "held_out_used": false,
-  "outer_cv": "GroupKFold(n_splits=5), groups=molecular formula",
-  "inner_cv": "GroupKFold(n_splits=3), groups=molecular formula",
-  "inner_selection_metric": "negative root mean squared error",
-  "outer_primary_metric": "mean coefficient of determination across five outer folds",
-  "outer_dispersion": "sample standard deviation across five outer-fold R2 values (ddof=1)",
-  "supporting_metrics": [
-    "pooled out-of-fold R2",
-    "RMSE",
-    "MAE"
+  "models": [
+    "XGBoost",
+    "RF",
+    "SVR",
+    "ANN"
   ],
+  "outer_cv": "GroupKFold(n_splits=5), groups=molecular_formula",
+  "inner_cv": "GroupKFold(n_splits=3), groups=molecular_formula",
+  "selection_scoring": "neg_root_mean_squared_error",
   "base_seed": 20260831,
-  "models": {
-    "XGBoost": {
-      "grid_combinations": 8,
-      "parameter_grid": [
-        {
-          "learning_rate": [
-            0.03
-          ],
-          "n_estimators": [
-            500
-          ],
-          "max_depth": [
-            2,
-            3
-          ],
-          "min_child_weight": [
-            1,
-            5
-          ],
-          "subsample": [
-            0.85
-          ]
-        },
-        {
-          "learning_rate": [
-            0.1
-          ],
-          "n_estimators": [
-            200
-          ],
-          "max_depth": [
-            2,
-            3
-          ],
-          "min_child_weight": [
-            1,
-            5
-          ],
-          "subsample": [
-            0.85
-          ]
-        }
-      ]
-    },
-    "RF": {
-      "grid_combinations": 8,
-      "parameter_grid": {
-        "max_depth": [
-          null,
-          8
+  "seed_policy": {
+    "nested_cv": "base_seed + 100 * target_index + 10 * model_index + outer_fold_number; target_index/model_index are zero-based in model_order and outer_fold_number is 1..5",
+    "final_fit": "base_seed + 9000 + deployment_index; deployment_index is zero-based in final_fit_target_order. Y02 is appended so v1.0.0 seeds for Y01 and Y03-Y07 remain unchanged."
+  },
+  "smoke_grid": false,
+  "parameter_grids": {
+    "XGBoost": [
+      {
+        "learning_rate": [
+          0.03
         ],
-        "min_samples_leaf": [
-          1,
+        "n_estimators": [
+          500
+        ],
+        "max_depth": [
+          2,
           3
         ],
-        "max_features": [
-          "sqrt",
-          1.0
+        "min_child_weight": [
+          1,
+          5
+        ],
+        "subsample": [
+          0.85
+        ]
+      },
+      {
+        "learning_rate": [
+          0.1
+        ],
+        "n_estimators": [
+          200
+        ],
+        "max_depth": [
+          2,
+          3
+        ],
+        "min_child_weight": [
+          1,
+          5
+        ],
+        "subsample": [
+          0.85
         ]
       }
+    ],
+    "RF": {
+      "max_depth": [
+        null,
+        8
+      ],
+      "min_samples_leaf": [
+        1,
+        3
+      ],
+      "max_features": [
+        "sqrt",
+        1.0
+      ]
     },
     "SVR": {
-      "grid_combinations": 12,
-      "parameter_grid": {
-        "regressor__regressor__C": [
-          1.0,
-          10.0,
-          100.0
-        ],
-        "regressor__regressor__gamma": [
-          "scale",
-          0.1
-        ],
-        "regressor__regressor__epsilon": [
-          0.05,
-          0.1
-        ]
-      }
+      "regressor__regressor__C": [
+        1.0,
+        10.0,
+        100.0
+      ],
+      "regressor__regressor__gamma": [
+        "scale",
+        0.1
+      ],
+      "regressor__regressor__epsilon": [
+        0.05,
+        0.1
+      ]
     },
     "ANN": {
-      "grid_combinations": 8,
-      "parameter_grid": {
-        "regressor__regressor__hidden_layer_sizes": [
-          [
-            16
-          ],
-          [
-            32,
-            16
-          ]
+      "regressor__regressor__hidden_layer_sizes": [
+        [
+          16
         ],
-        "regressor__regressor__activation": [
-          "tanh",
-          "relu"
-        ],
-        "regressor__regressor__alpha": [
-          0.0001,
-          0.01
+        [
+          32,
+          16
         ]
-      }
+      ],
+      "regressor__regressor__activation": [
+        "tanh",
+        "relu"
+      ],
+      "regressor__regressor__alpha": [
+        0.0001,
+        0.01
+      ]
     }
   },
-  "versions": {
-    "python": "3.12.13",
+  "fixed_parameters": {
+    "XGBoost": {
+      "objective": "reg:squarederror",
+      "tree_method": "hist",
+      "colsample_bytree": 0.8,
+      "reg_lambda": 1.0,
+      "reg_alpha": 0.0,
+      "n_jobs": 1,
+      "verbosity": 0
+    },
+    "RF": {
+      "n_estimators": 500,
+      "bootstrap": true,
+      "n_jobs": 1
+    },
+    "SVR": {
+      "kernel": "rbf"
+    },
+    "ANN": {
+      "solver": "lbfgs",
+      "max_iter": 5000,
+      "max_fun": 50000
+    }
+  },
+  "y02_policy": "Y02 is an independently collected response and is modelled directly on available complete cases; predicted Y01 multiplied by predicted Y03 is retained only as a physical-baseline sensitivity analysis",
+  "held_out_data_accessed": false,
+  "software_versions": {
+    "python": "3.12.3",
     "numpy": "2.5.2",
     "pandas": "3.0.5",
     "scipy": "1.18.1",
     "scikit_learn": "1.9.0",
-    "xgboost": "3.4.1"
-  }
+    "xgboost": "3.4.1",
+    "joblib": "1.5.3"
+  },
+  "generated_at_utc": "2026-09-05T08:15:36.144463+00:00"
 }

@@ -1,4 +1,4 @@
-# SAF-Predict v1.0.0 training workflow
+# SAF-Predict v1.1.0 training workflow
 
 `saf_reproduce.py` is the portable command-line implementation of the complete
 model-development workflow. It reads the public development CSV, compares four
@@ -11,21 +11,14 @@ No machine-specific path is embedded in the code.
 1. XGBoost, random forest (RF), support vector regression (SVR), and an
    artificial neural network (ANN) are compared for Y01-Y07 with outer
    five-fold and inner three-fold `GroupKFold`. Molecular formula is the group.
-2. The recorded deployment family for each property is tuned on the complete
-   300-record development table and exported as Joblib, JSON, and browser-ready
-   JavaScript.
+2. Each recorded deployment family is tuned on all available labels for its
+   property and exported as Joblib, JSON, and browser-ready JavaScript.
 
-Direct Y02 regressors are retained only as model-comparison benchmarks. The
-deployed prediction is always:
-
-```text
-predicted Y02 = predicted Y01 * predicted Y03
-```
-
-When the development CSV is loaded, the training script also reconstructs the
-direct-benchmark Y02 target from Y01 and Y03. This preserves the exact
-spreadsheet identity across decimal CSV round-tripping and matches the target
-values used for the archived Figure 4 calculation.
+Y01 and Y03-Y07 use all 300 development records. Y02 is a separately curated
+response available for 162 records in 66 molecular-formula groups. The other
+138 Y02 cells remain missing and are excluded from Y02 fitting and scoring.
+The product of Y01 and Y03 predictions is retained only as a documented
+physical-baseline sensitivity analysis; it is not the deployed Y02 estimate.
 
 ## Files
 
@@ -52,8 +45,9 @@ record_id,molecular_formula,X01,X02,X03,X04,X05,X06,X07,Y01,Y02,Y03,Y04,Y05,Y06,
 
 `molecule` or the public-table spelling `molecule_name` is optional and is
 used only as a display label in manifests and prediction tables. The default
-validation requires exactly 300 development records, at least five
-molecular-formula groups, and finite, non-constant X/Y columns.
+validation requires exactly 300 development records, at least five labelled
+molecular-formula groups per target, complete finite inputs and Y01/Y03-Y07,
+and finite non-constant available Y02 labels.
 `data/development.csv` contains 300 records in 73 formula groups.
 
 The command accepts development data only. `data/held_out_test.csv` has no role
@@ -66,7 +60,8 @@ For Figure 4 comparability, the nested-CV output separates each direct target
 into `formula-derived` and `source-supported` strata. Public
 `development.csv` retains the per-target `reference_map`; the workflow
 reconstructs these two analysis strata from that map and the explicit reference
-IDs in `config.json`. Y02 is always `constructed`. These are the original
+IDs in `config.json`. Y02 uses the separate `author-curated independent
+response` class and is not treated as a verified high-confidence stratum. These are the original
 Figure 4 analysis strata, not replacements for the more detailed value-origin
 classes in `data/provenance_long.csv`.
 
@@ -82,6 +77,10 @@ After `nested-cv`, compare the complete output directory against the archived
 records without relying on row order or file hashes:
 
 ```bash
+python scripts/build_model_consistency_table.py \
+  --oof run_outputs/cv/oof_predictions.csv \
+  --config training/config.json \
+  --output run_outputs/cv/xgboost_reference_vs_deployment_consistency.csv
 python scripts/compare_cv_artifacts.py \
   --generated-dir run_outputs/cv \
   --archive-dir artifacts/cv \
@@ -91,6 +90,16 @@ python scripts/compare_cv_artifacts.py \
 The comparator enforces exact categorical fields and a default absolute
 numerical tolerance of `1e-12`; only run-instance timing, timestamps, hashes,
 paths, and related metadata are excluded.
+
+After the final CV artifacts are copied to `artifacts/cv/`, generate the
+XGBoost-reference versus deployment-model agreement table with:
+
+```bash
+python scripts/build_model_consistency_table.py \
+  --oof artifacts/cv/oof_predictions.csv \
+  --config training/config.json \
+  --output artifacts/cv/xgboost_reference_vs_deployment_consistency.csv
+```
 
 ## Commands from the repository root
 
@@ -130,7 +139,7 @@ python training/saf_reproduce.py train-export \
   --config training/config.json \
   --cv-dir run_outputs/cv \
   --output-dir run_outputs/release \
-  --version 1.0.0 \
+  --version 1.1.0 \
   --n-jobs 1
 ```
 
@@ -141,7 +150,7 @@ python training/saf_reproduce.py all \
   --input data/development.csv \
   --config training/config.json \
   --output-dir run_outputs/full \
-  --version 1.0.0 \
+  --version 1.1.0 \
   --n-jobs 1
 ```
 
@@ -152,7 +161,8 @@ python training/saf_reproduce.py all \
   `base_seed + 100 * target_index + 10 * model_index + outer_fold_number`.
 - Final-fit seed: `base_seed + 9000 + deployment_index`, where
   `deployment_index` is zero-based in the fixed order Y01, Y03, Y04, Y05, Y06,
-  Y07 (thus 20269831 through 20269836).
+  Y07, Y02. Appending Y02 preserves the v1.0.0 seeds for the other six models;
+  the Y02 seed is 20269837.
 
 `GroupKFold` is deterministic and does not shuffle. Stochastic estimators use
 one thread. Grid-search parallelism is controlled separately by `--n-jobs`;
@@ -163,14 +173,14 @@ one thread. Grid-search parallelism is controlled separately by `--n-jobs`;
 | Target | Deployment |
 |---|---|
 | Y01 | RF |
-| Y02 | predicted Y01 multiplied by predicted Y03 |
+| Y02 | RF, fitted to the independently collected Y02 response |
 | Y03 | SVR |
 | Y04 | XGBoost |
 | Y05 | SVR |
 | Y06 | SVR |
 | Y07 | SVR |
 
-ANN remains in the complete comparison but is not a v1.0.0 browser-deployment
+ANN remains in the complete comparison but is not a v1.1.0 browser-deployment
 model.
 
 ## Generated nested-CV files
@@ -180,12 +190,13 @@ model.
 - `oof_predictions.csv`
 - `model_target_summary.csv`
 - `provenance_stratified_metrics.csv`
-- `y02_direct_vs_derived_sensitivity.csv`
+- `y02_direct_vs_physical_baseline.csv`
 - `protocol.json`
 - `qa.json`
 
-A complete run produces 8,400 out-of-fold rows: 300 records x 4 algorithms x
-7 targets. QA verifies one prediction per record/model/target and zero
+A complete run produces 7,848 out-of-fold rows: four algorithms multiplied by
+six 300-record targets plus one 162-record Y02 target. QA verifies one
+prediction per available record/model/target and zero
 molecular-formula overlap between each outer training and validation subset.
 
 ## Generated deployment files

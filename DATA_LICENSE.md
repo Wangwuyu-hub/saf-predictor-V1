@@ -25,6 +25,6 @@ that a citation alone grants permission for every downstream use.
 
 Suggested attribution for project-authored material:
 
-> SAF-Predict contributors. SAF-Predict v1.0.0: descriptor-based
+> SAF-Predict contributors. SAF-Predict v1.1.0: descriptor-based
 > physicochemical-property prediction for hydrocarbon fuel candidates. GitHub
 > and the version-specific Zenodo record.

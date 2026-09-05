@@ -36,6 +36,8 @@ TABLE_SPECS: tuple[dict[str, Any], ...] = (
         "categorical": (
             "property",
             "unit",
+            "target_records",
+            "target_formula_groups",
             "n_train",
             "n_test",
             "train_formula_groups",
@@ -83,10 +85,32 @@ TABLE_SPECS: tuple[dict[str, Any], ...] = (
         "numeric": ("r2", "rmse", "mae"),
     },
     {
-        "name": "y02_direct_vs_derived_sensitivity.csv",
+        "name": "y02_direct_vs_physical_baseline.csv",
         "keys": ("model", "approach"),
         "categorical": ("n",),
         "numeric": ("oof_r2", "oof_rmse", "oof_mae"),
+    },
+    {
+        "name": "xgboost_reference_vs_deployment_consistency.csv",
+        "keys": ("target",),
+        "categorical": (
+            "deployment_model",
+            "n",
+            "formula_groups",
+            "bootstrap_iterations",
+            "bootstrap_formula_groups",
+        ),
+        "numeric": (
+            "prediction_pearson_r_xgboost_vs_deployment",
+            "xgboost_oof_r2",
+            "deployment_oof_r2",
+            "delta_r2_deployment_minus_xgboost",
+            "delta_r2_ci95_lower",
+            "delta_r2_ci95_upper",
+            "bootstrap_probability_delta_r2_gt_zero",
+            "prediction_r_ci95_lower",
+            "prediction_r_ci95_upper",
+        ),
     },
 )
 
@@ -298,31 +322,43 @@ def compare_protocol(generated_dir: Path, archive_dir: Path, tolerance: float) -
         return result
     generated = json.loads(generated_path.read_text(encoding="utf-8"))
     archived = json.loads(archived_path.read_text(encoding="utf-8"))
-    archive_models = archived.get("models", {})
     comparisons = {
-        "records": (generated.get("records"), archived.get("n_records")),
+        "analysis": (generated.get("analysis"), archived.get("analysis")),
+        "records": (generated.get("records"), archived.get("records")),
+        "formula_groups": (generated.get("formula_groups"), archived.get("formula_groups")),
+        "target_records": (generated.get("target_records"), archived.get("target_records")),
+        "target_formula_groups": (
+            generated.get("target_formula_groups"),
+            archived.get("target_formula_groups"),
+        ),
         "inputs": (generated.get("inputs"), archived.get("inputs")),
         "targets": (generated.get("targets"), archived.get("targets")),
-        "models": (generated.get("models"), list(archive_models)),
+        "models": (generated.get("models"), archived.get("models")),
         "outer_folds": (parse_splits(generated.get("outer_cv")), parse_splits(archived.get("outer_cv"))),
         "inner_folds": (parse_splits(generated.get("inner_cv")), parse_splits(archived.get("inner_cv"))),
+        "selection_scoring": (
+            generated.get("selection_scoring"),
+            archived.get("selection_scoring"),
+        ),
         "base_seed": (generated.get("base_seed"), archived.get("base_seed")),
+        "seed_policy": (generated.get("seed_policy"), archived.get("seed_policy")),
+        "smoke_grid": (generated.get("smoke_grid"), archived.get("smoke_grid")),
+        "parameter_grids": (
+            generated.get("parameter_grids"),
+            archived.get("parameter_grids"),
+        ),
+        "fixed_parameters": (
+            generated.get("fixed_parameters"),
+            archived.get("fixed_parameters"),
+        ),
+        "y02_policy": (generated.get("y02_policy"), archived.get("y02_policy")),
     }
     mismatches: list[dict[str, Any]] = []
     for name, (generated_value, archived_value) in comparisons.items():
         compare_value(generated_value, archived_value, tolerance, name, mismatches)
-    for model, archived_settings in archive_models.items():
-        generated_grid = generated.get("parameter_grids", {}).get(model)
-        compare_value(
-            generated_grid,
-            archived_settings.get("parameter_grid"),
-            tolerance,
-            f"parameter_grid.{model}",
-            mismatches,
-        )
     result.update(
         {
-            "compared_fields": list(comparisons) + [f"parameter_grid.{model}" for model in archive_models],
+            "compared_fields": list(comparisons),
             "mismatch_count": len(mismatches),
             "mismatch_sample": mismatches,
             "pass": not mismatches,
@@ -352,7 +388,7 @@ def compare_qa(generated_dir: Path, archive_dir: Path) -> dict[str, Any]:
     generated = json.loads(generated_path.read_text(encoding="utf-8"))
     archived = json.loads(archived_path.read_text(encoding="utf-8"))
     generated_pass = generated.get("all_checks_passed")
-    archived_pass = archived.get("pass")
+    archived_pass = archived.get("all_checks_passed", archived.get("pass"))
     result.update(
         {
             "generated_all_checks_passed": generated_pass,

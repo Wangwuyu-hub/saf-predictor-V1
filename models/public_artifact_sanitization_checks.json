@@ -2,22 +2,22 @@
   "record_type": "self-generated release-integrity record; not an independent audit",
   "source_private_joblib": {
     "distributed_in_public_release": false,
-    "sha256": "e5a648cba47e0ba98e902144e45b937610f82c0d96719b4ef248cf3ab903ef73"
+    "sha256": "0e00a01bd287d098ba5feb597bdf14d5e99534c8f71b130ffe96375481acdfeb"
   },
   "public_joblib": {
     "path": "models/SAF_Predict_public_model_bundle_v1.joblib",
-    "sha256": "d4ecab30c318d1923f27b7f0acb1fb117510edb5a603857903d6568c736477a7"
+    "sha256": "3b28cc27600af8f6393d7e1df8359d93a9d5b293b7ad4ef8e5e0036107741158"
   },
   "public_browser_bundle": {
     "json_path": "models/model_bundle.json",
-    "json_sha256": "93003b6d25338b0096d20b8d0d29612dc2a54b2e3798a9a4a18a73e38f0dbffe",
+    "json_sha256": "57a21e8133624132151b08f8f9210eb00d6a98dcf16ebbdfa0dae688f79f1fa7",
     "javascript_path": "model_bundle.js",
-    "javascript_sha256": "d8cca36e6ea10bccb25d725d791317fb7958c4999610e1eea3cbd76c85c741f2",
+    "javascript_sha256": "ca09648cb40469785ebe47d185adf9dc443cafb1a6400d4a6b1b0b7469c1b3e3",
     "record_count": 300,
     "record_schema_valid": true,
     "development_x_vectors_equal_private_source": true,
     "name_zh_absent": true,
-    "author_reported_held_out_field_scoped": true
+    "author_reported_held_out_field_scoped": false
   },
   "development_record_count": 300,
   "approved_transformations": [
@@ -26,17 +26,18 @@
     "Added factual public-release metadata-reduction notes and a descriptor-vector linkability caveat.",
     "Mapped validation nearest-development identifiers to DEV identifiers and removed nearest-development molecule/formula columns."
   ],
-  "canonical_scientific_payload_sha256": "1d85ff9e0d105c0e650e26f5b6351d48260319c2c200acf4fba5ee6d41675972",
+  "canonical_scientific_payload_sha256": "8ddd66bd2c14c76144a6945acafcead7093da86d8702791faa3246056948f82e",
   "semantic_equivalence": {
     "canonical_scientific_payload_equal": true,
     "trained_estimator_joblib_hashes_equal": true,
     "trained_estimator_hashes": {
       "Y01": "7e1e0dfdf8cf500569780d28cef89ae959283143fc0772f0e43d0ee8bc7d4af2",
-      "Y03": "555a99d76790f45a669e68c8b5d13eace5fbb920344d8ddc41229ee7c73695d4",
+      "Y03": "deff3a03f3d62444ca0fe0b9d2c3159ae4c64468c22f762feea6aa48d6c9980a",
       "Y04": "dc6d5f9b007c0f2b08904e9a5e8e3930c8f9f8d47d8a5c3a04642f080799a96c",
-      "Y05": "ea09fa74a937800ff8099048ee86c8ca0d30d34da910551a23fc133c55929088",
-      "Y06": "12f62c6b8d87adb10dd7336ef4eff5dcac262f5e4835578952d6da493142a472",
-      "Y07": "5c2d0b0b6302c5ee773c8127e758139b9ba2f0495d21a8bfb696aba14bf1edab"
+      "Y05": "c49c00dabfc37980d8a68bfd4e66ec222238424090f1fa632aac0a60ce760f03",
+      "Y06": "b61534ada0eca2342c62c240fa03ec081956a8546dbf2d1b13d868b5cbbe542b",
+      "Y07": "85d73585bd05e3102a57be1b4c46cdb1d6a927bbcac7fc77d3ff41855643a64a",
+      "Y02": "7888d03b9b47d41ea5fae19785a710057e1c0be54d967eb81fc1e4898f3e4ef3"
     },
     "predictions_exact_for_all_checked_rows": true,
     "prediction_rows_checked": 310,
@@ -47,7 +48,8 @@
       "Y04": true,
       "Y05": true,
       "Y06": true,
-      "Y07": true
+      "Y07": true,
+      "Y02": true
     },
     "maximum_absolute_prediction_difference": {
       "Y01": 0.0,
@@ -55,7 +57,8 @@
       "Y04": 0.0,
       "Y05": 0.0,
       "Y06": 0.0,
-      "Y07": 0.0
+      "Y07": 0.0,
+      "Y02": 0.0
     },
     "intervals_equal": true,
     "input_ranges_equal": true,
@@ -69,9 +72,9 @@
   "validation_csvs": {
     "held_out_predictions.csv": {
       "path": "validation/held_out_predictions.csv",
-      "expected_private_source_sha256": "040a212e0ff390af7d7ec8a0e68e7c77c5c19b09d2bbd3c6b274a5b245e19018",
-      "input_sha256": "0c33f25d14867300b76e85c22d318d04c9c4653798554201c9bfab3758f405a4",
-      "public_sha256": "0c33f25d14867300b76e85c22d318d04c9c4653798554201c9bfab3758f405a4",
+      "expected_private_source_sha256": null,
+      "input_sha256": "c2414f8de7462035def5b10f7241cac2629466f5713c9bd70ab834891bf1d642",
+      "public_sha256": "dec53205aa548e4c58d3bdeb1fafc9373f1de6e1c8885af3e75d2b7f384f8f74",
       "row_count": 10,
       "holdout_identity_fields_preserved": [
         "record_id",
@@ -87,9 +90,9 @@
     },
     "held_out_test_predictions_long.csv": {
       "path": "validation/held_out_test_predictions_long.csv",
-      "expected_private_source_sha256": "a9132b32e99880d21371a000b4cd2cf6b924fa28c3a6044945ed1abc02a47581",
-      "input_sha256": "18eadf1f77c0c7ecbd248055974d3556c9840af3683cb3cdb8ec9d696e748cc1",
-      "public_sha256": "18eadf1f77c0c7ecbd248055974d3556c9840af3683cb3cdb8ec9d696e748cc1",
+      "expected_private_source_sha256": null,
+      "input_sha256": "b2ffed221c3a95003efd299e8415029c48c97249eef8ff22e62f5791691aeef8",
+      "public_sha256": "540dc851cdb4fa23547ea44c48a15760209152306b38515c2170c958700cd715",
       "row_count": 70,
       "holdout_identity_fields_preserved": [
         "record_id",

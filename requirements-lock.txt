@@ -1,4 +1,4 @@
-# Fully pinned Python 3.12 environment used for the v1.0.0 reproduction checks.
+# Fully pinned Python 3.12 environment used for the v1.1.0 reproduction checks.
 # Install with: python -m pip install -r requirements-lock.txt
 joblib==1.5.3
 narwhals==2.25.0

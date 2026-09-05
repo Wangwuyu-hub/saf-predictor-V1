@@ -1,5 +1,6 @@
 {
   "pass": true,
+  "release_version": "1.1.0",
   "development_records": 300,
   "held_out_records": 10,
   "unique_record_ids": 310,
@@ -7,24 +8,41 @@
   "formula_groups_development": 73,
   "formula_groups_held_out": 9,
   "provenance_rows": 2170,
-  "reference_rows": 491,
+  "reference_rows": 492,
   "missing_cas": 58,
   "missing_pubchem_cid": 27,
+  "y02_independent_labels_development": 162,
+  "y02_independent_labels_held_out": 8,
+  "y02_missing_development": 138,
+  "y02_missing_held_out": 2,
+  "y02_physical_baseline_available_only_in_separate_audit_table": true,
+  "y02_full_legacy_rows_audited": 243,
+  "y02_full_audit_status_counts": {
+    "retained for direct Y02 fitting": 162,
+    "not present in current 300-record development table": 71,
+    "retained as internal held-out Y02 response": 8,
+    "excluded: conflicting legacy Y02 labels map to the same current record": 2
+  },
   "value_origin_counts": {
-    "calculated from literature thermochemistry": 96,
-    "constructed from Y01 and Y03": 310,
-    "experimental measurement": 95,
-    "evaluated or compiled literature value": 236,
     "formula or correlation estimate": 1045,
     "source database value; measurement status not resolved": 312,
+    "evaluated or compiled literature value": 236,
+    "author-curated independently collected response": 170,
+    "not available": 140,
+    "calculated from literature thermochemistry": 96,
+    "experimental measurement": 95,
     "source-reported experimental value": 76
   },
   "conditions_status_counts": {
     "reported": 1092,
-    "not applicable": 925,
+    "not applicable": 615,
+    "unresolved": 170,
+    "not available": 140,
     "partly reported": 93,
     "not reported": 60
   },
-  "all_numeric_complete": true,
-  "all_pure_hydrocarbon": true
+  "all_input_numeric_complete": true,
+  "all_non_y02_targets_complete": true,
+  "all_pure_hydrocarbon": true,
+  "y02_claim_boundary": "Independently collected relative to the current Y01 and Y03 release columns; row-level direct experimental status, primary source, and measurement conditions remain unresolved unless explicitly documented in the reconciliation table."
 }
