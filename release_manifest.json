@@ -1,7 +1,7 @@
 {
   "platform": "SAF-Predict",
   "version": "1.1.0",
-  "generated_at_utc": "2026-09-05T08:34:27.152503+00:00",
+  "generated_at_utc": "2026-09-05T08:40:17.593354+00:00",
   "scope": "Every public release file listed below is content-addressed; checksums.sha256 additionally covers this manifest.",
   "claim_boundary": "File-content identification and release integrity only; not independent audit, browser/operating-system compatibility certification, or proof of analysis chronology.",
   "file_count_excluding_manifest_and_checksum_list": 87,
@@ -33,7 +33,7 @@
     "validation/full_nested_cv_reproduction_check.json": "761d544be1fc8a506c1d8c0b884b8a22f7c4aeca0025118f4790b27554e4d542",
     "validation/training_export_reproduction_check.json": "25bd627c1e505e267ea72340a46bb8895c6400fa2be84373d3c78b92bc95dbac",
     "validation/v1_0_to_v1_1_six_target_regression_check.json": "6ae58dbe17fe5862948aecd6a315e66f80f0ca74de28ff1952f35ebe77c22706",
-    "RELEASE_CHECKS.json": "b32f697ea867ab929a4d28e530a961fac3ea52e55ba6e116ef641f400babf603"
+    "RELEASE_CHECKS.json": "8e0fc947063522f5fdbe1eb5411f0fd1cfbf8d55b96147665814a2e73e645b3c"
   },
   "data_and_reproducibility_artifacts": {
     "VERSION.txt": "0b046ce210f9ec1ff2eabcece7bc149d7ecd3cf1a63d11c6b4f10312f04ce922",
@@ -45,7 +45,7 @@
     "data/references.csv": "af81144131b084cbc2d691537bf80e8e7517dcfd4098f3657713bf053f9c5a2f",
     "data/data_dictionary.csv": "a7eb0c2a2b4aa90aaa26ab4f7d420dac7b492037f029d6ce40a6f8a5a568a5db",
     "data/cv_fold_manifest.csv": "ebad2e755cf408611e405501a1dca899ef9f9c188970e9b089a8a4544c5f30db",
-    "data/data_release_checks.json": "c73771418520b74a1737e5c498f197ba197e031e1eca277f1630b006f11c2ec6",
+    "data/data_release_checks.json": "574ddf98968b36f2f4e45d48c4984fc69ff91c0c888c61af65033e6d65cfa47d",
     "data/y02_direct_response_reconciliation.csv": "5da817c3ffbda034311d14b02d861fe2bf63c17318d0c0f4d4cb206f1b82daa8",
     "data/y02_full_reconciliation_audit.csv": "4caa203a266e2e13310ab4b457f27d7ffd7d82fb768cdd7b9cbe1690d07762f6",
     "data/y02_physical_baseline_audit.csv": "52d8f868ead5a4e98ac8d983b07c49d085d9a4f6d4ee4bbf961bf46bf29966cd",
@@ -78,7 +78,7 @@
     "nested_cv_oof_sha256": "c630628fbb87a8e19eda700ee380be8d0f0d9e9bcaac68a26c0e17e08b960a3d"
   },
   "all_files": {
-    ".gitattributes": "4e7d1c06b5300df0a91ed1d9f5c1eca1e2397e62109c5fa75d5115d98d1776b0",
+    ".gitattributes": "4ba2c060f5f611f53c99e6e6d50e3c85a39fdbb981e57f70c48a23ba0a4a534d",
     ".github/workflows/full-model-reproduction.yml": "67b90b69cfecd6fdfcf74e20c663734a9a2b1b0168db579b562a8e83d329a29d",
     ".github/workflows/reproducibility-checks.yml": "102101bc73ad45e2f937b19547211b51e8aba480f0da15aac924dc71916a69a0",
     ".gitignore": "cc9dbbfa7ae2421393bd37d9232279b739b1147cca257cec3c8fe70c19c9d077",
@@ -97,7 +97,7 @@
     "CITATION.cff": "a0df74645471612032625d5b83efc36d4e675208d80b5db70b0425c92b76564d",
     "data/cv_fold_manifest.csv": "ebad2e755cf408611e405501a1dca899ef9f9c188970e9b089a8a4544c5f30db",
     "data/data_dictionary.csv": "a7eb0c2a2b4aa90aaa26ab4f7d420dac7b492037f029d6ce40a6f8a5a568a5db",
-    "data/data_release_checks.json": "c73771418520b74a1737e5c498f197ba197e031e1eca277f1630b006f11c2ec6",
+    "data/data_release_checks.json": "574ddf98968b36f2f4e45d48c4984fc69ff91c0c888c61af65033e6d65cfa47d",
     "data/development.csv": "b5c8d7d783094f4393bb3fa8d9ea02510aa1f337519fec4fb2cd0c328263b3f2",
     "data/held_out_test.csv": "87d45e7f212f7d49d654bacf2a14c3d54a2fcdfa9c1c70e430f012403c0bdbbc",
     "data/provenance_long.csv": "17fcf43b209ea03027b5e8ab4db705b5627d4223a6bd39b448fce43f3020261a",
@@ -126,7 +126,7 @@
     "predictor_core.js": "381210958b152a2b26355118ba7ad979d110190365914d999f9d6216168ea903",
     "README.html": "b23e1ec9a1da151a794481b830cfba7d4380d973a4f3dc185a00b5b84fd3cd4f",
     "README.md": "852fb4586643cabe94ec7b893e3fe060cc0582a5637de5af5fe6f48bd41e2fd5",
-    "RELEASE_CHECKS.json": "b32f697ea867ab929a4d28e530a961fac3ea52e55ba6e116ef641f400babf603",
+    "RELEASE_CHECKS.json": "8e0fc947063522f5fdbe1eb5411f0fd1cfbf8d55b96147665814a2e73e645b3c",
     "RELEASE_NOTES_v1.1.0.md": "765177a7ca36724886ebec930b818f262586fe82cd62865459c986de94dcce1b",
     "REPRODUCIBILITY.md": "c5a0b18ab4d8109f306fcd0d4aeae5cd9e7b1c6f40ad652f29f387fbe82745dd",
     "requirements-lock.txt": "003cc16f3c03d5b207f79d4d622a45cba577b62253af5d5738a91592126c97e7",

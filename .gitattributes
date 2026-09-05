@@ -13,6 +13,7 @@ validation/*.csv -text
 validation/*.json -text
 examples/*.csv -text
 data/*.csv text eol=lf
+data/data_release_checks.json -text -eol
 artifacts/cv/*.csv text eol=lf
 checksums.sha256 -text
 release_manifest.json -text

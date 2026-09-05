@@ -44,5 +44,5 @@
   "all_input_numeric_complete": true,
   "all_non_y02_targets_complete": true,
   "all_pure_hydrocarbon": true,
-  "y02_claim_boundary": "Independently collected relative to the current Y01 and Y03 release columns; row-level direct experimental status, primary source, and measurement conditions remain unresolved unless explicitly documented in the reconciliation table."
+  "y02_claim_boundary": "Collected independently of the current Y01 and Y03 release columns; row-level direct experimental status, primary source, and measurement conditions remain unresolved unless explicitly documented in the reconciliation table."
 }
