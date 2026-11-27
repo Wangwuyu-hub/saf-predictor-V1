@@ -1,4 +1,4 @@
-name: Full model reproduction
+name: Historical v1.1.0 full model reproduction
 
 on:
   workflow_dispatch:
@@ -9,6 +9,8 @@ jobs:
     timeout-minutes: 180
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: 735ffc174820e5b84fef348e06c7282995ec96b9
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"

@@ -1,4 +1,4 @@
-name: Reproducibility checks
+name: Version-scoped reproducibility checks
 
 on:
   push:
@@ -6,10 +6,13 @@ on:
   workflow_dispatch:
 
 jobs:
-  quick-checks:
+  legacy-archive-checks:
+    name: Historical v1.1.0 archive
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: 735ffc174820e5b84fef348e06c7282995ec96b9
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -49,3 +52,47 @@ jobs:
           python scripts/run_release_qa.py
           --node "$(command -v node)"
           --verify-release-manifest
+
+  publication-snapshot-checks:
+    name: Publication snapshot 2026-11-27
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Assemble and verify the complete publication archive
+        run: >-
+          python revisions/2026-11-27/assemble_source.py
+          --output-dir "${{ runner.temp }}/publication"
+      - name: Check portable inference and scientific consistency
+        working-directory: ${{ runner.temp }}/publication/Prediction_Platform_Source_20261127
+        run: python -m unittest discover -s tests
+      - name: Export all ten descriptor-only comparison cases
+        working-directory: ${{ runner.temp }}/publication/Prediction_Platform_Source_20261127
+        run: python run_cli.py --input data/example_inputs.csv --output "${{ runner.temp }}/publication_predictions.csv"
+      - name: Compare the portable outputs with the archived results
+        working-directory: ${{ runner.temp }}/publication/Prediction_Platform_Source_20261127
+        env:
+          EXPORTED_CSV: ${{ runner.temp }}/publication_predictions.csv
+        run: |
+          python - <<'PYCODE'
+          import csv, math, os
+          def rows(path):
+              with open(path, encoding='utf-8-sig', newline='') as stream:
+                  return {r['record_id']: r for r in csv.DictReader(stream)}
+          actual = rows(os.environ['EXPORTED_CSV'])
+          expected = rows('reports/platform_outputs_all10.csv')
+          assert len(actual) == 10 and set(actual) == set(expected)
+          fields = [f'Y{i:02}_pred' for i in range(1, 8)] + ['Y02_direct_diagnostic']
+          maximum = 0.0
+          for record_id, row in actual.items():
+              assert row['status'] == 'ok', record_id
+              assert row['model_version'] == '3.0.0', record_id
+              for field in fields:
+                  difference = abs(float(row[field]) - float(expected[record_id][field]))
+                  assert math.isfinite(difference) and difference <= 1e-8, (record_id, field, difference)
+                  maximum = max(maximum, difference)
+              assert float(row['Y02_pred']) == float(row['Y01_pred']) * float(row['Y03_pred']), record_id
+          print(f"Verified 80 numeric outputs; maximum absolute difference {maximum:.3g}.")
+          PYCODE
