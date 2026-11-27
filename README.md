@@ -1,10 +1,10 @@
-> **Current manuscript snapshot:** [27 November 2026 — prediction platform 3.0.0](revisions/2026-11-27/README.md).
+> **Current manuscript snapshot:** [28 November 2026 — prediction platform 3.1.0](revisions/2026-11-28/README.md).
 >
-> The dated folder supplies the complete, verified source archive, models, data,
-> evaluation records and spreadsheet exports for the current revision. Download
-> its release ZIP or assemble the retained archive parts, then run the commands
-> from the extracted source folder. Earlier releases and the historical
-> root-level application remain available below; their results are distinct.
+> The dated release contains the new fitted models, data, grouped searches,
+> ANN convergence and budget-sensitivity records, figures and numerical exports.
+> An independent clean rebuild reproduces the current numerical results.
+> Download the complete source ZIP from the dated release and follow its README.
+> Earlier releases and the historical root-level application are retained below.
 
 ---
 
