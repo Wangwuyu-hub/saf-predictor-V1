@@ -1,0 +1,34 @@
+{
+  "snapshot_date": "2026-11-27",
+  "platform_version": "3.0.0",
+  "archive": {
+    "name": "Prediction_Platform_Source_20261127.zip",
+    "bytes": 78461080,
+    "sha256": "9b589811016ff7f8548aff070ddc24ab7422a9f1c8ad364c33b4466ac6b8f347",
+    "top_directory": "Prediction_Platform_Source_20261127"
+  },
+  "source_manifest_sha256": "38c351c69dff9a4bc10e5a2fff5e0a04a937ccff00cbe8a87e6e510813c05a01",
+  "assembly_script_sha256": "b09eb3df69d6ff99ef7cfff65eb510457b5aa00a673fe06a5ecc2ddb9d5bc3ec",
+  "parts": [
+    {
+      "name": "Prediction_Platform_Source_20261127.zip.part01",
+      "bytes": 20971520,
+      "sha256": "4af139c39b8d7ecad17b169bffdea9a18296eeaccbc8ed4356631d83769ed357"
+    },
+    {
+      "name": "Prediction_Platform_Source_20261127.zip.part02",
+      "bytes": 20971520,
+      "sha256": "b01191eaf1f6846f5ef8a617c0d1a104edb3854111f525133105f78bb3b9ce45"
+    },
+    {
+      "name": "Prediction_Platform_Source_20261127.zip.part03",
+      "bytes": 20971520,
+      "sha256": "cffc23ab331ede86a8b88a2426f7df5510c9190bc8523558d1cf4ef2d91669ab"
+    },
+    {
+      "name": "Prediction_Platform_Source_20261127.zip.part04",
+      "bytes": 15546520,
+      "sha256": "13aea836d06b09b2931eed797fc37aee7de2ce774ba3a56d3811b04bae00baac"
+    }
+  ]
+}
